@@ -92,7 +92,7 @@ server.tool(
   {
     key: z.string().optional().describe("DocsCategoryKey (e.g. 'sparkles-title')"),
     href: z.string().optional().describe("DocsNavigationCategory href (e.g. '/components/sparkles-title')"),
-    pathPrefix: z.string().optional().default("url"),
+    pathPrefix: z.string().nullable().optional().default(null),
     timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
   },
   async ({ key, href, pathPrefix, timeoutMs }) => {
@@ -171,7 +171,7 @@ server.tool(
   {
     key: z.string().optional().describe("DocsCategoryKey (e.g. 'accordion')"),
     href: z.string().optional().describe("DocsNavigationCategory href (e.g. '/components/accordion')"),
-    pathPrefix: z.string().optional().default("url"),
+    pathPrefix: z.string().nullable().optional().default(null),
     format: z.enum(["raw_html", "text", "snippet"]).optional().default("text"),
     maxChars: z.number().int().min(200).max(200000).optional().default(8000),
     timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),

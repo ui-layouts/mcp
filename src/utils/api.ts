@@ -2,7 +2,7 @@ import { extractMetaFromHtml } from './html.js';
 
 const UA = "ui-layouts-mcp/0.1 (+mcp)";
 
-export function buildRemoteUrl(baseUrl: string, href: string, pathPrefix?: string) {
+export function buildRemoteUrl(baseUrl: string, href: string, pathPrefix?: string | null) {
   const base = baseUrl.replace(/\/+$/, "");
   const prefix = pathPrefix ? `/${pathPrefix.replace(/^\/+|\/+$/g, "")}` : "";
   const cleanHref = href.startsWith("/") ? href : `/${href}`;
