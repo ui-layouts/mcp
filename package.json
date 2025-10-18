@@ -2,7 +2,7 @@
   "name": "ui-layouts-mcp",
   "version": "0.1.0",
   "description": "MCP server for ui-layouts (local STDIO)",
-  "main": "index.js",
+  "main": "dist/index.js",
   "type": "module",
   "scripts": {
     "build": "tsc",
@@ -21,11 +21,10 @@
     "node": ">=18"
   },
   "bin": {
-    "ui-layouts-mcp": "./build/index.js"
+    "ui-layouts-mcp": "./dist/index.js"
   },
   "files": [
-    "dist",
-    "bin"
+    "dist"
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.20.1",
