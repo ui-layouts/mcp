@@ -68,3 +68,24 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
     twitterImage,
   };
 }
+
+
+export function htmlToText(html: string): string {
+  let out = html.replace(/<script[\s\S]*?<\/script>/gi, "")
+                .replace(/<style[\s\S]*?<\/style>/gi, "");
+  out = out.replace(/<\/(p|div|section|article|h[1-6]|li|br|main|header|footer)>/gi, "$&\n");
+
+  out = out.replace(/<[^>]+>/g, "");
+  out = out.replace(/\r?\n\s*\n\s*\n+/g, "\n\n").trim();
+  return out;
+}
+
+export function extractMainSection(html: string): string {
+  const pick = (re: RegExp) => html.match(re)?.[1]?.trim();
+  return (
+    pick(/<article[^>]*>([\s\S]*?)<\/article>/i) ??
+    pick(/<main[^>]*>([\s\S]*?)<\/main>/i) ??
+    pick(/<body[^>]*>([\s\S]*?)<\/body>/i) ??
+    html
+  );
+}

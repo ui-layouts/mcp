@@ -2,9 +2,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { DocsNavigationCategories, DocsNavigationCategory } from './registry.js';
-import { buildRemoteUrl, fetchRemoteMetaHTML } from './utils/api.js';
+import { buildRemoteUrl, fetchHtml, fetchRemoteMetaHTML } from './utils/api.js';
 
 const norm = (s: string) => s.toLowerCase().trim();
+const BASE_URL = "https://ui-layouts.com";
 
 const server = new McpServer({
   name: "ui-layouts-mcp",
@@ -93,7 +94,6 @@ server.tool(
     timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
   },
   async ({ key, href, pathPrefix, timeoutMs }) => {
-    const baseUrl = "https://ui-layouts.com";
 
     let item: DocsNavigationCategory | undefined;
     if (key) item = DocsNavigationCategories.find((c) => c.key === key);
@@ -105,7 +105,7 @@ server.tool(
       };
     }
 
-    const fullUrl = buildRemoteUrl(baseUrl, item.href, pathPrefix);
+    const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
     const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
     if (!meta) {
       return {
@@ -134,6 +134,91 @@ server.tool(
     ].filter(Boolean);
 
     return { content: [{ type: "text", text: lines.join("\n") }] };
+  },
+);
+
+function htmlToText(html: string): string {
+  // 스크립트/스타일 제거
+  let out = html.replace(/<script[\s\S]*?<\/script>/gi, "")
+                .replace(/<style[\s\S]*?<\/style>/gi, "");
+
+  // 라인 브레이크 넣어주면 가독성 ↑
+  out = out.replace(/<\/(p|div|section|article|h[1-6]|li|br|main|header|footer)>/gi, "$&\n");
+
+  // 태그 제거
+  out = out.replace(/<[^>]+>/g, "");
+
+  // 공백 정리
+  out = out.replace(/\r?\n\s*\n\s*\n+/g, "\n\n").trim();
+  return out;
+}
+
+function extractMainSection(html: string): string {
+  const pick = (re: RegExp) => html.match(re)?.[1]?.trim();
+  return (
+    pick(/<article[^>]*>([\s\S]*?)<\/article>/i) ??
+    pick(/<main[^>]*>([\s\S]*?)<\/main>/i) ??
+    pick(/<body[^>]*>([\s\S]*?)<\/body>/i) ??
+    html
+  );
+}
+
+server.tool(
+  "get_docs",
+  "Fetch docs HTML for a component from ui-layouts.com and return as raw_html, plain text, or a main-section snippet.",
+  {
+    key: z.string().optional().describe("DocsCategoryKey (e.g. 'accordion')"),
+    href: z.string().optional().describe("DocsNavigationCategory href (e.g. '/components/accordion')"),
+    pathPrefix: z.string().optional().default("url"),
+    format: z.enum(["raw_html", "text", "snippet"]).optional().default("text"),
+    maxChars: z.number().int().min(200).max(200000).optional().default(8000),
+    timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
+  },
+  async ({ key, href, pathPrefix, format, maxChars, timeoutMs }) => {
+    let item: DocsNavigationCategory | undefined;
+    if (key) item = DocsNavigationCategories.find((c) => c.key === key);
+    if (!item && href) item = DocsNavigationCategories.find((c) => c.href === href);
+
+    if (!item) {
+      return { content: [{ type: "text", text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})` }] };
+    }
+
+    const url = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+
+    const html = await fetchHtml(url, timeoutMs);
+    if (!html) {
+      return { content: [{ type: "text", text: `⚠️ Failed to fetch docs from: ${url}` }] };
+    }
+
+    let output: string;
+    if (format === "raw_html") {
+      output = html.slice(0, maxChars);
+    } else if (format === "snippet") {
+      const section = extractMainSection(html);
+      output = htmlToText(section).slice(0, maxChars);
+    } else {
+      output = htmlToText(html).slice(0, maxChars);
+    }
+
+    const header = [
+      `# Docs`,
+      `- **name**: ${item.name}`,
+      `- **key**: \`${item.key}\``,
+      `- **href**: \`${item.href}\``,
+      `- **url**: ${url}`,
+      `- **format**: ${format}`,
+      `- **maxChars**: ${maxChars}`,
+      "",
+    ].join("\n");
+
+    const body =
+      format === "raw_html"
+        ? "```html\n" + output + "\n```"
+        : output;
+
+    return {
+      content: [{ type: "text", text: header + body }],
+    };
   },
 );
 
