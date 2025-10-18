@@ -19,24 +19,6 @@ const server = new McpServer({
 });
 
 server.tool(
-  "hello",
-  "Simple Hello World tool",
-  {
-    name: z.string().optional().describe("Your name (optional)"),
-  },
-  async ({ name }) => {
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Hello, ${name ?? "world"}! 👋`,
-        },
-      ],
-    };
-  },
-);
-
-server.tool(
   "search_components",
   "Search ui-layouts components by name / key / group / tags / href.",
   {
