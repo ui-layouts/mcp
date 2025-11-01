@@ -12,7 +12,7 @@ const BASE_URL = "https://ui-layouts.com";
 
 const server = new McpServer({
   name: "ui-layouts-mcp",
-  version: "0.0.1",
+  version: "0.2.0",
   capabilities: {
     resources: {},
     tools: {},

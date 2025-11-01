@@ -79,7 +79,7 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 ### ⚙️ Server Info
 
 - **Server name:** `ui-layouts-mcp`  
-- **Version:** `0.0.1`  
+- **Version:** `0.2.0`  
 - **Transport:** `stdio`  
 - **Base URL:** [https://ui-layouts.com](https://ui-layouts.com)
 
