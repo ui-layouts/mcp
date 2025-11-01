@@ -5,6 +5,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod";
 import { DocsNavigationCategories, DocsNavigationCategory } from './registry.js';
 import { buildRemoteUrl, fetchHtml, fetchRemoteMetaHTML, fetchJson } from './utils/api.js';
+import { extractMainSection, htmlToText } from './utils/html.js';
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
@@ -67,86 +68,6 @@ server.tool(
   },
 );
 
-
-server.tool(
-  "get_component_meta",
-  "Fetch remote HTML metadata from https://ui-layouts.com by calling https://ui-layouts.com/<pathPrefix>/<registry.href>.",
-  {
-    key: z.string().optional().describe("DocsCategoryKey (e.g. 'sparkles-title')"),
-    href: z.string().optional().describe("DocsNavigationCategory href (e.g. '/components/sparkles-title')"),
-    pathPrefix: z.string().nullable().optional().default(null),
-    timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
-  },
-  async ({ key, href, pathPrefix, timeoutMs }) => {
-
-    let item: DocsNavigationCategory | undefined;
-    if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-    if (!item && href) item = DocsNavigationCategories.find((c) => c.href === href);
-
-    if (!item) {
-      return {
-        content: [{ type: "text", text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})` }],
-      };
-    }
-
-    const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
-    const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
-    if (!meta) {
-      return {
-        content: [{ type: "text", text: `⚠️ Failed to fetch metadata from: ${fullUrl}` }],
-      };
-    }
-
-    const lines = [
-      `# Remote Metadata`,
-      `- **name**: ${item.name}`,
-      `- **key**: \`${item.key}\``,
-      `- **href**: \`${item.href}\``,
-      `- **url**: ${meta.url}`,
-      meta.title ? `- **title**: ${meta.title}` : "",
-      meta.description ? `- **description**: ${meta.description}` : "",
-      meta.image ? `- **image**: ${meta.image}` : "",
-      meta.keywords?.length ? `- **keywords**: ${meta.keywords.join(", ")}` : "",
-      meta.author ? `- **author**: ${meta.author}` : "",
-      meta.creator ? `- **creator**: ${meta.creator}` : "",
-      meta.ogTitle ? `- **og:title**: ${meta.ogTitle}` : "",
-      meta.ogDescription ? `- **og:description**: ${meta.ogDescription}` : "",
-      meta.ogImage ? `- **og:image**: ${meta.ogImage}` : "",
-      meta.twitterTitle ? `- **twitter:title**: ${meta.twitterTitle}` : "",
-      meta.twitterDescription ? `- **twitter:description**: ${meta.twitterDescription}` : "",
-      meta.twitterImage ? `- **twitter:image**: ${meta.twitterImage}` : "",
-    ].filter(Boolean);
-
-    return { content: [{ type: "text", text: lines.join("\n") }] };
-  },
-);
-
-function htmlToText(html: string): string {
-  // 스크립트/스타일 제거
-  let out = html.replace(/<script[\s\S]*?<\/script>/gi, "")
-                .replace(/<style[\s\S]*?<\/style>/gi, "");
-
-  // 라인 브레이크 넣어주면 가독성 ↑
-  out = out.replace(/<\/(p|div|section|article|h[1-6]|li|br|main|header|footer)>/gi, "$&\n");
-
-  // 태그 제거
-  out = out.replace(/<[^>]+>/g, "");
-
-  // 공백 정리
-  out = out.replace(/\r?\n\s*\n\s*\n+/g, "\n\n").trim();
-  return out;
-}
-
-function extractMainSection(html: string): string {
-  const pick = (re: RegExp) => html.match(re)?.[1]?.trim();
-  return (
-    pick(/<article[^>]*>([\s\S]*?)<\/article>/i) ??
-    pick(/<main[^>]*>([\s\S]*?)<\/main>/i) ??
-    pick(/<body[^>]*>([\s\S]*?)<\/body>/i) ??
-    html
-  );
-}
-
 server.tool(
   "get_docs",
   "Fetch docs HTML for a component from ui-layouts.com and return as raw_html, plain text, or a main-section snippet.",
@@ -203,6 +124,59 @@ server.tool(
     return {
       content: [{ type: "text", text: header + body }],
     };
+  },
+);
+
+server.tool(
+  "get_component_meta",
+  "Fetch remote HTML metadata from https://ui-layouts.com by calling https://ui-layouts.com/<pathPrefix>/<registry.href>.",
+  {
+    key: z.string().optional().describe("DocsCategoryKey (e.g. 'sparkles-title')"),
+    href: z.string().optional().describe("DocsNavigationCategory href (e.g. '/components/sparkles-title')"),
+    pathPrefix: z.string().nullable().optional().default(null),
+    timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
+  },
+  async ({ key, href, pathPrefix, timeoutMs }) => {
+
+    let item: DocsNavigationCategory | undefined;
+    if (key) item = DocsNavigationCategories.find((c) => c.key === key);
+    if (!item && href) item = DocsNavigationCategories.find((c) => c.href === href);
+
+    if (!item) {
+      return {
+        content: [{ type: "text", text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})` }],
+      };
+    }
+
+    const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+    const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
+    if (!meta) {
+      return {
+        content: [{ type: "text", text: `⚠️ Failed to fetch metadata from: ${fullUrl}` }],
+      };
+    }
+
+    const lines = [
+      `# Remote Metadata`,
+      `- **name**: ${item.name}`,
+      `- **key**: \`${item.key}\``,
+      `- **href**: \`${item.href}\``,
+      `- **url**: ${meta.url}`,
+      meta.title ? `- **title**: ${meta.title}` : "",
+      meta.description ? `- **description**: ${meta.description}` : "",
+      meta.image ? `- **image**: ${meta.image}` : "",
+      meta.keywords?.length ? `- **keywords**: ${meta.keywords.join(", ")}` : "",
+      meta.author ? `- **author**: ${meta.author}` : "",
+      meta.creator ? `- **creator**: ${meta.creator}` : "",
+      meta.ogTitle ? `- **og:title**: ${meta.ogTitle}` : "",
+      meta.ogDescription ? `- **og:description**: ${meta.ogDescription}` : "",
+      meta.ogImage ? `- **og:image**: ${meta.ogImage}` : "",
+      meta.twitterTitle ? `- **twitter:title**: ${meta.twitterTitle}` : "",
+      meta.twitterDescription ? `- **twitter:description**: ${meta.twitterDescription}` : "",
+      meta.twitterImage ? `- **twitter:image**: ${meta.twitterImage}` : "",
+    ].filter(Boolean);
+
+    return { content: [{ type: "text", text: lines.join("\n") }] };
   },
 );
 
