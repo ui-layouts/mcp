@@ -26,6 +26,17 @@ export function toAbsoluteUrl(maybeUrl?: string, base?: string) {
 
 export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
   const get = (re: RegExp) => html.match(re)?.[1]?.trim();
+  
+  const getAll = (re: RegExp): Array<{ name: string; content: string }> => {
+    const results: Array<{ name: string; content: string }> = [];
+    const matches = html.matchAll(re);
+    for (const match of matches) {
+      if (match[1] && match[2]) {
+        results.push({ name: match[1].trim(), content: match[2].trim() });
+      }
+    }
+    return results;
+  };
 
   const title =
     get(/<title[^>]*>([\s\S]*?)<\/title>/i) ??
@@ -53,13 +64,14 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
   const ogImage = toAbsoluteUrl(ogImageRaw, url);
   const twitterImage = toAbsoluteUrl(twitterImageRaw, url);
 
+  // Extract custom meta tags (e.g., ui-layouts:component-names)
+  const customMetas = getAll(/<meta[^>]*name=["']([^"']+)["'][^>]*content=["']([^"']+)["'][^>]*>/gi);
   const other: Record<string, string> = {};
-  const customMetaMatches = html.matchAll(/<meta[^>]+name=["']([^"']+)["'][^>]+content=["']([^"']*)["']/gi);
-  for (const match of customMetaMatches) {
-    const name = match[1]?.trim();
-    const content = match[2]?.trim();
-    if (name && content && !['description', 'keywords', 'author', 'creator', 'twitter:title', 'twitter:description', 'twitter:image'].includes(name)) {
-      other[name] = content;
+  for (const { name, content } of customMetas) {
+    // Only extract ui-layouts: prefixed meta tags and remove the prefix
+    if (name.startsWith('ui-layouts:')) {
+      const key = name.replace(/^ui-layouts:/, '');
+      other[key] = content;
     }
   }
 
