@@ -53,6 +53,16 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
   const ogImage = toAbsoluteUrl(ogImageRaw, url);
   const twitterImage = toAbsoluteUrl(twitterImageRaw, url);
 
+  const other: Record<string, string> = {};
+  const customMetaMatches = html.matchAll(/<meta[^>]+name=["']([^"']+)["'][^>]+content=["']([^"']*)["']/gi);
+  for (const match of customMetaMatches) {
+    const name = match[1]?.trim();
+    const content = match[2]?.trim();
+    if (name && content && !['description', 'keywords', 'author', 'creator', 'twitter:title', 'twitter:description', 'twitter:image'].includes(name)) {
+      other[name] = content;
+    }
+  }
+
   return {
     url,
     title,
@@ -67,6 +77,7 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
     twitterTitle,
     twitterDescription,
     twitterImage,
+    other: Object.keys(other).length > 0 ? other : undefined,
   };
 }
 
