@@ -137,7 +137,6 @@ server.tool(
     timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
   },
   async ({ key, href, pathPrefix, timeoutMs }) => {
-
     let item: DocsNavigationCategory | undefined;
     if (key) item = DocsNavigationCategories.find((c) => c.key === key);
     if (!item && href) item = DocsNavigationCategories.find((c) => c.href === href);
@@ -155,6 +154,16 @@ server.tool(
         content: [{ type: "text", text: `⚠️ Failed to fetch metadata from: ${fullUrl}` }],
       };
     }
+
+    const componentNamesRaw = meta.other?.["component-names"] ?? [];
+    const availableRaw = meta.other?.["available-components"] ?? [];
+
+    const componentNames = typeof componentNamesRaw === "string"
+      ? componentNamesRaw.split(",").map(s => s.trim()).filter(Boolean)
+      : Array.isArray(componentNamesRaw) ? componentNamesRaw : [];
+    const availableComponents = typeof availableRaw === "string"
+      ? availableRaw.split("|").map(s => s.trim()).filter(Boolean)
+      : Array.isArray(availableRaw) ? availableRaw : [];
 
     const lines = [
       `# Remote Metadata`,
@@ -174,6 +183,12 @@ server.tool(
       meta.twitterTitle ? `- **twitter:title**: ${meta.twitterTitle}` : "",
       meta.twitterDescription ? `- **twitter:description**: ${meta.twitterDescription}` : "",
       meta.twitterImage ? `- **twitter:image**: ${meta.twitterImage}` : "",
+      componentNames.length
+        ? `- **ui-layouts:component-names**: ${componentNames.join(", ")}`
+        : "",
+      availableComponents.length
+        ? `- **ui-layouts:available-components**: ${availableComponents.join(", ")}`
+        : "",
     ].filter(Boolean);
 
     return { content: [{ type: "text", text: lines.join("\n") }] };
@@ -184,16 +199,16 @@ server.tool(
   "get_source_code",
   "Fetch component source code bundle from https://ui-layouts.com/r/{key}.json (or custom filename), list files and optionally return a specific file content.",
   {
-    key: z.string().optional().describe("Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"),
+    componentName: z.string().optional().describe("Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"),
     maxChars: z.number().int().min(200).max(200000).optional().default(20000),
     timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
   },
-  async ({ key, timeoutMs, maxChars }) => {
-    if (!key) {
-      return { content: [{ type: "text", text: `⚠️ Component key is required` }] };
+  async ({ componentName, timeoutMs, maxChars }) => {
+    if (!componentName) {
+      return { content: [{ type: "text", text: `⚠️ Component name is required` }] };
     }
 
-    const jsonUrl = `${BASE_URL}/r/${key}.json`;
+    const jsonUrl = `${BASE_URL}/r/${componentName}.json`;
 
     const json = await fetchJson<any>(jsonUrl, timeoutMs);
     if (!json) {
@@ -207,7 +222,7 @@ server.tool(
 
     const header = [
       `# Source Code`,
-      `- **key**: \`${key}\``,
+      `- **componentName**: \`${componentName}\``,
       `- **url**: ${jsonUrl}`,
       `- **maxChars**: ${maxChars}`,
       "",

@@ -12,6 +12,7 @@ export interface RemoteMeta {
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;
+  other?: Record<string, string>;
 };
 
 export function toAbsoluteUrl(maybeUrl?: string, base?: string) {
