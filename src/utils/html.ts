@@ -12,6 +12,7 @@ export interface RemoteMeta {
   twitterTitle?: string;
   twitterDescription?: string;
   twitterImage?: string;
+  other?: Record<string, string>;
 };
 
 export function toAbsoluteUrl(maybeUrl?: string, base?: string) {
@@ -25,6 +26,17 @@ export function toAbsoluteUrl(maybeUrl?: string, base?: string) {
 
 export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
   const get = (re: RegExp) => html.match(re)?.[1]?.trim();
+  
+  const getAll = (re: RegExp): Array<{ name: string; content: string }> => {
+    const results: Array<{ name: string; content: string }> = [];
+    const matches = html.matchAll(re);
+    for (const match of matches) {
+      if (match[1] && match[2]) {
+        results.push({ name: match[1].trim(), content: match[2].trim() });
+      }
+    }
+    return results;
+  };
 
   const title =
     get(/<title[^>]*>([\s\S]*?)<\/title>/i) ??
@@ -52,6 +64,17 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
   const ogImage = toAbsoluteUrl(ogImageRaw, url);
   const twitterImage = toAbsoluteUrl(twitterImageRaw, url);
 
+  // Extract custom meta tags (e.g., ui-layouts:component-names)
+  const customMetas = getAll(/<meta[^>]*name=["']([^"']+)["'][^>]*content=["']([^"']+)["'][^>]*>/gi);
+  const other: Record<string, string> = {};
+  for (const { name, content } of customMetas) {
+    // Only extract ui-layouts: prefixed meta tags and remove the prefix
+    if (name.startsWith('ui-layouts:')) {
+      const key = name.replace(/^ui-layouts:/, '');
+      other[key] = content;
+    }
+  }
+
   return {
     url,
     title,
@@ -66,6 +89,7 @@ export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
     twitterTitle,
     twitterDescription,
     twitterImage,
+    other: Object.keys(other).length > 0 ? other : undefined,
   };
 }
 

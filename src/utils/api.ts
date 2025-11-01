@@ -46,3 +46,22 @@ export async function fetchHtml(url: string, timeoutMs = 7000): Promise<string |
     return null;
   }
 }
+
+export async function fetchJson<T = any>(url: string, timeoutMs = 7000): Promise<T | null> {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), timeoutMs);
+    const res = await fetch(url, {
+      signal: ctrl.signal,
+      headers: {
+        "User-Agent": UA,
+        "Accept": "application/json,text/plain;q=0.9,*/*;q=0.8",
+      },
+    });
+    clearTimeout(t);
+    if (!res.ok) return null;
+    return (await res.json()) as T;
+  } catch {
+    return null;
+  }
+}
