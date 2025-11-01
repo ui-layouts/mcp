@@ -4,7 +4,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { DocsNavigationCategories, DocsNavigationCategory } from './registry.js';
-import { buildRemoteUrl, fetchHtml, fetchRemoteMetaHTML } from './utils/api.js';
+import { buildRemoteUrl, fetchHtml, fetchRemoteMetaHTML, fetchJson } from './utils/api.js';
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
@@ -203,6 +203,45 @@ server.tool(
     return {
       content: [{ type: "text", text: header + body }],
     };
+  },
+);
+
+server.tool(
+  "get_source_code",
+  "Fetch component source code bundle from https://ui-layouts.com/r/{key}.json (or custom filename), list files and optionally return a specific file content.",
+  {
+    key: z.string().optional().describe("Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"),
+    maxChars: z.number().int().min(200).max(200000).optional().default(20000),
+    timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
+  },
+  async ({ key, timeoutMs, maxChars }) => {
+    if (!key) {
+      return { content: [{ type: "text", text: `⚠️ Component key is required` }] };
+    }
+
+    const jsonUrl = `${BASE_URL}/r/${key}.json`;
+
+    const json = await fetchJson<any>(jsonUrl, timeoutMs);
+    if (!json) {
+      return { content: [{ type: "text", text: `⚠️ Failed to fetch from: ${jsonUrl}` }] };
+    }
+
+    const content = json?.files?.[0]?.content;
+    if (!content) {
+      return { content: [{ type: "text", text: `⚠️ No content found in ${jsonUrl}` }] };
+    }
+
+    const header = [
+      `# Source Code`,
+      `- **key**: \`${key}\``,
+      `- **url**: ${jsonUrl}`,
+      `- **maxChars**: ${maxChars}`,
+      "",
+    ].join("\n");
+
+    const body = ["```tsx", content.slice(0, maxChars), "```"].join("\n");
+
+    return { content: [{ type: "text", text: header + body }] };
   },
 );
 
