@@ -1,5 +1,8 @@
 # @ui-layouts/mcp
 
+[![npm version](https://img.shields.io/npm/v/%40ui-layouts%2Fmcp.svg)](https://www.npmjs.com/package/@ui-layouts/mcp)
+[![node version](https://img.shields.io/node/v/%40ui-layouts%2Fmcp.svg)](https://www.npmjs.com/package/@ui-layouts/mcp)
+
 `@ui-layouts/mcp` provides AI assistants with several valuable tools to help them **search, understand, and retrieve UI components** from [ui-layouts.com](https://ui-layouts.com).
 
 Each tool can be used independently, but they are designed to work together as a complete "component exploration pipeline."
