@@ -14,7 +14,7 @@ import {
   fetchJson,
 } from "./utils/api.js";
 import { extractMainSection, htmlToText } from "./utils/html.js";
-import pkg from "../package.json";
+import pkg from "../package.json" with { type: "json" };
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";

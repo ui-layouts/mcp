@@ -1,5 +1,5 @@
 import { extractMetaFromHtml } from "./html.js";
-import pkg from "../../package.json";
+import pkg from "../../package.json" with { type: "json" };
 
 const UA = `@ui-layouts/mcp/${pkg.version} (+mcp)`;
 
