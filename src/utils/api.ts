@@ -1,8 +1,13 @@
-import { extractMetaFromHtml } from './html.js';
+import { extractMetaFromHtml } from "./html.js";
+import pkg from "../../package.json";
 
-const UA = "ui-layouts-mcp/0.1 (+mcp)";
+const UA = `@ui-layouts/mcp/${pkg.version} (+mcp)`;
 
-export function buildRemoteUrl(baseUrl: string, href: string, pathPrefix?: string | null) {
+export function buildRemoteUrl(
+  baseUrl: string,
+  href: string,
+  pathPrefix?: string | null
+) {
   const base = baseUrl.replace(/\/+$/, "");
   const prefix = pathPrefix ? `/${pathPrefix.replace(/^\/+|\/+$/g, "")}` : "";
   const cleanHref = href.startsWith("/") ? href : `/${href}`;
@@ -17,7 +22,7 @@ export async function fetchRemoteMetaHTML(url: string, timeoutMs = 7000) {
       signal: ctrl.signal,
       headers: {
         "User-Agent": UA,
-        "Accept": "text/html,application/xhtml+xml",
+        Accept: "text/html,application/xhtml+xml",
       },
     });
     clearTimeout(t);
@@ -28,7 +33,10 @@ export async function fetchRemoteMetaHTML(url: string, timeoutMs = 7000) {
     return null;
   }
 }
-export async function fetchHtml(url: string, timeoutMs = 7000): Promise<string | null> {
+export async function fetchHtml(
+  url: string,
+  timeoutMs = 7000
+): Promise<string | null> {
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -36,7 +44,7 @@ export async function fetchHtml(url: string, timeoutMs = 7000): Promise<string |
       signal: ctrl.signal,
       headers: {
         "User-Agent": UA,
-        "Accept": "text/html,application/xhtml+xml",
+        Accept: "text/html,application/xhtml+xml",
       },
     });
     clearTimeout(t);
@@ -47,7 +55,10 @@ export async function fetchHtml(url: string, timeoutMs = 7000): Promise<string |
   }
 }
 
-export async function fetchJson<T = any>(url: string, timeoutMs = 7000): Promise<T | null> {
+export async function fetchJson<T = any>(
+  url: string,
+  timeoutMs = 7000
+): Promise<T | null> {
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -55,7 +66,7 @@ export async function fetchJson<T = any>(url: string, timeoutMs = 7000): Promise
       signal: ctrl.signal,
       headers: {
         "User-Agent": UA,
-        "Accept": "application/json,text/plain;q=0.9,*/*;q=0.8",
+        Accept: "application/json,text/plain;q=0.9,*/*;q=0.8",
       },
     });
     clearTimeout(t);
