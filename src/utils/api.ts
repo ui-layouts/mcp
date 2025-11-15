@@ -1,6 +1,7 @@
 import { extractMetaFromHtml } from "./html.js";
+import pkg from "../../package.json";
 
-const UA = "@ui-layouts/mcp/0.2.0 (+mcp)";
+const UA = `@ui-layouts/mcp/${pkg.version} (+mcp)`;
 
 export function buildRemoteUrl(
   baseUrl: string,

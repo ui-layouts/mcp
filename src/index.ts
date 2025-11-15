@@ -14,13 +14,14 @@ import {
   fetchJson,
 } from "./utils/api.js";
 import { extractMainSection, htmlToText } from "./utils/html.js";
+import pkg from "../package.json";
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
 
 const server = new McpServer({
   name: "@ui-layouts/mcp",
-  version: "0.2.0",
+  version: pkg.version,
   capabilities: {
     resources: {},
     tools: {},
