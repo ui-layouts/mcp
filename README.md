@@ -1,16 +1,41 @@
 # @ui-layouts/mcp
 
-## 🛠️ Tools
-
 `@ui-layouts/mcp` provides AI assistants with several valuable tools to help them **search, understand, and retrieve UI components** from [ui-layouts.com](https://ui-layouts.com).
 
-Each tool can be used independently, but they are designed to work together as a complete “component exploration pipeline.”
+Each tool can be used independently, but they are designed to work together as a complete "component exploration pipeline."
+
+## 📦 Installation & MCP Setup
+
+### Requirements
+
+- **Node.js:** >=20.10.0
+- **MCP Client:** Claude Desktop, Cursor, or compatible MCP client
+
+### Quick Start
+
+Run `@ui-layouts/mcp` without installing it globally using `npx`. This is the recommended way to get started:
+
+```jsonc
+{
+  "mcpServers": {
+    "@ui-layouts/mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["@ui-layouts/mcp"]
+    }
+  }
+}
+```
+
+> 💡 **Note:** `npx` will automatically download and run the latest version of `@ui-layouts/mcp` when needed. No global installation required!
 
 ---
 
+## 🛠️ Tools
+
 ### 🔍 `search_components`
 
-Search through the **ui-layouts.com** component registry by component name, key, group, tags, or href.  
+Search through the **ui-layouts.com** component registry by component name, key, group, tags, or href.
 It performs intelligent matching to find components that meet your criteria and returns detailed information about each match.
 
 **When it's useful**
@@ -23,7 +48,7 @@ It performs intelligent matching to find components that meet your criteria and 
 
 ### 📘 `get_docs`
 
-Fetch the **complete documentation** for a component from **ui-layouts.com**.  
+Fetch the **complete documentation** for a component from **ui-layouts.com**.
 You can choose how much content to return, including:
 
 - `raw_html` — the original HTML of the documentation page
@@ -40,8 +65,8 @@ You can choose how much content to return, including:
 
 ### 🧩 `get_component_meta`
 
-Fetch structured **HTML metadata** for a specific component from **ui-layouts.com**.  
-It includes fields such as **title**, **description**, **keywords**, **Open Graph**, **Twitter card**,  
+Fetch structured **HTML metadata** for a specific component from **ui-layouts.com**.
+It includes fields such as **title**, **description**, **keywords**, **Open Graph**, **Twitter card**,
 and even custom metadata like `component-names` and `available-components`.
 
 **When it's useful**
@@ -54,8 +79,8 @@ and even custom metadata like `component-names` and `available-components`.
 
 ### 💾 `get_source_code`
 
-Fetch the **actual TypeScript/React source code** of a component directly from  
-[`https://ui-layouts.com/r/{component}.json`](https://ui-layouts.com/r/accordion.json).  
+Fetch the **actual TypeScript/React source code** of a component directly from
+[`https://ui-layouts.com/r/{component}.json`](https://ui-layouts.com/r/accordion.json).
 The tool reads the `files[].content` field from the JSON registry and returns the `.tsx` implementation.
 
 **When it's useful**
