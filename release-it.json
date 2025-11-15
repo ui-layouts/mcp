@@ -2,7 +2,6 @@
   "git": {
     "requireCleanWorkingDir": true,
     "requireUpstream": true,
-    "requireBranch": "main",
     "commit": true,
     "commitMessage": "chore: release v${version}",
     "tag": true,

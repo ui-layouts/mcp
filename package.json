@@ -47,5 +47,8 @@
   },
   "bugs": {
     "url": "https://github.com/ui-layouts/mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
