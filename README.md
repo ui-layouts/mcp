@@ -21,7 +21,7 @@ Run `@ui-layouts/mcp` without installing it globally using `npx`. This is the re
 ```jsonc
 {
   "mcpServers": {
-    "@ui-layouts/mcp": {
+    "ui-layouts-mcp": {
       "type": "stdio",
       "command": "npx",
       "args": ["@ui-layouts/mcp"]
@@ -31,6 +31,14 @@ Run `@ui-layouts/mcp` without installing it globally using `npx`. This is the re
 ```
 
 > 💡 **Note:** `npx` will automatically download and run the latest version of `@ui-layouts/mcp` when needed. No global installation required!
+
+### Using with Claude Code (CLI)
+
+```bash
+claude mcp add ui-layouts-mcp --scope user -- npx -y @ui-layouts/mcp
+```
+
+This registers the MCP server under the CLI-safe name ui-layouts-mcp while still using the @ui-layouts/mcp npm package.
 
 ---
 
@@ -110,7 +118,8 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 
 ### ⚙️ Server Info
 
-- **Server name:** `@ui-layouts/mcp`
+- **MCP server name (alias):** `ui-layouts-mcp`
+- **npm package:** `@ui-layouts/mcp`
 - **Version:** `0.2.0`
 - **Transport:** `stdio`
 - **Base URL:** [https://ui-layouts.com](https://ui-layouts.com)
