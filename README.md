@@ -38,7 +38,7 @@ Run `@ui-layouts/mcp` without installing it globally using `npx`. This is the re
 claude mcp add ui-layouts-mcp --scope user -- npx -y @ui-layouts/mcp
 ```
 
-This registers the MCP server under the CLI-safe name ui-layouts-mcp while still using the @ui-layouts/mcp npm package.
+This registers the MCP server under the CLI-safe name `ui-layouts-mcp` while still using the `@ui-layouts/mcp` npm package.
 
 ---
 
