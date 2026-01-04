@@ -134,3 +134,14 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 > call tool get_component_meta { "key": "align-slider" }
 > call tool get_source_code { "componentName": "align-slider" }
 ```
+
+
+## 👤 Author (Naymur)
+
+- X: [@naymur_dev](https://x.com/naymur_dev)
+- LinkedIn: [in/naymur-rahman](https://www.linkedin.com/in/naymur-rahman/)
+
+## Be A Sponsor
+
+<a href="https://buymeacoffee.com/uilayouts"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="naymur-uilayout" /></a>
+<br/>
