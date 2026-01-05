@@ -26,7 +26,8 @@ const server = new McpServer({
     resources: {},
     tools: {},
   },
-});
+} as any);
+
 
 server.tool(
   "search_components",
