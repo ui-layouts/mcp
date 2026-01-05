@@ -136,11 +136,11 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 ```
 
 
-## 👤 Author (Naymur)
+## 👤 Author (Naymur & Jinho)
 
 - X: [@naymur_dev](https://x.com/naymur_dev)
 - LinkedIn: [in/naymur-rahman](https://www.linkedin.com/in/naymur-rahman/)
-
+- LinkedIn: [in/jinho-yeom](https://www.linkedin.com/in/jinho-yeom/)
 ## Be A Sponsor
 
 <a href="https://buymeacoffee.com/uilayouts"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="naymur-uilayout" /></a>
