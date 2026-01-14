@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/%40ui-layouts%2Fmcp.svg)](https://www.npmjs.com/package/@ui-layouts/mcp)
 [![node version](https://img.shields.io/node/v/%40ui-layouts%2Fmcp.svg)](https://www.npmjs.com/package/@ui-layouts/mcp)
+[![MCP Badge](https://lobehub.com/badge/mcp-full/ui-layouts-mcp)](https://lobehub.com/mcp/ui-layouts-mcp)
 
 `@ui-layouts/mcp` provides AI assistants with several valuable tools to help them **search, understand, and retrieve UI components** from [ui-layouts.com](https://ui-layouts.com).
 
