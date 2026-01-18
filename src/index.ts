@@ -407,6 +407,9 @@ server.prompt(
       .describe("Whether to include source code ('true' or 'false', default: 'true')"),
   },
   async ({ componentKey, componentHref, framework = "react", includeSourceCode = "true" }) => {
+    // Normalize includeSourceCode to boolean early
+    const shouldIncludeSource = includeSourceCode === "true";
+
     let item: DocsNavigationCategory | undefined;
     if (componentKey)
       item = DocsNavigationCategories.find((c) => c.key === componentKey);
@@ -450,7 +453,9 @@ server.prompt(
       `   - maxChars: 8000`,
       `2) Call \`get_component_meta\` with:`,
       `   - key: "${item.key}"`,
-      `3) ${includeSourceCode === "true" ? `Call \`get_source_code\` with componentName from metadata` : `Skip source code (user requested false)`}`,
+      shouldIncludeSource
+        ? `3) Call \`get_source_code\` with componentName from metadata`
+        : `3) Skip source code (user requested false)`,
       ``,
       `## Output Format (MUST)`,
       `### Overview`,
@@ -493,7 +498,9 @@ server.prompt(
       `- Common issues and solutions`,
       `- Debugging tips`,
       ``,
-      `Make the guide practical, actionable, and easy to follow. Include real code examples from the source when available.`,
+      shouldIncludeSource
+        ? `Make the guide practical, actionable, and easy to follow. Include real code examples from the source when available.`
+        : `Make the guide practical, actionable, and easy to follow. Use docs snippets only.`,
     ]
       .filter(Boolean)
       .join("\n");
