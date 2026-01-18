@@ -384,6 +384,131 @@ server.prompt(
   }
 );
 
+
+server.prompt(
+  "implement_component",
+  "Get a step-by-step implementation guide for a ui-layouts component, including code examples, integration steps, and best practices.",
+  {
+    componentKey: z
+      .string()
+      .optional()
+      .describe("Component key (e.g. 'accordion', 'sparkles-title')"),
+    componentHref: z
+      .string()
+      .optional()
+      .describe("Component href (e.g. '/components/accordion')"),
+    framework: z
+      .string()
+      .optional()
+      .describe("Target framework (e.g. 'react', 'next', 'vite', 'general', default: 'react')"),
+    includeSourceCode: z
+      .string()
+      .optional()
+      .describe("Whether to include source code ('true' or 'false', default: 'true')"),
+  },
+  async ({ componentKey, componentHref, framework = "react", includeSourceCode = "true" }) => {
+    let item: DocsNavigationCategory | undefined;
+    if (componentKey)
+      item = DocsNavigationCategories.find((c) => c.key === componentKey);
+    if (!item && componentHref)
+      item = DocsNavigationCategories.find((c) => c.href === componentHref);
+
+    if (!item) {
+      return {
+        messages: [
+          {
+            role: "user",
+            content: {
+              type: "text",
+              text: `⚠️ Component not found (key=${componentKey ?? "-"}, href=${componentHref ?? "-"})`,
+            },
+          },
+        ],
+      };
+    }
+
+    const instructions = [
+      `# Component Implementation Guide`,
+      ``,
+      `## Target Component`,
+      `- **Name**: ${item.name}`,
+      `- **Key**: \`${item.key}\``,
+      `- **Href**: \`${item.href}\``,
+      `- **Group**: ${item.group}`,
+      item.tags?.length ? `- **Tags**: ${item.tags.join(", ")}` : "",
+      `- **Framework**: ${framework}`,
+      ``,
+      `## Important`,
+      `- You MUST use available tools to gather accurate information.`,
+      `- Do NOT guess or make up implementation details.`,
+      `- Provide practical, copy-paste ready code examples.`,
+      ``,
+      `## Required Tool Calls`,
+      `1) Call \`get_docs\` with:`,
+      `   - key: "${item.key}"`,
+      `   - format: "snippet"`,
+      `   - maxChars: 8000`,
+      `2) Call \`get_component_meta\` with:`,
+      `   - key: "${item.key}"`,
+      `3) ${includeSourceCode === "true" ? `Call \`get_source_code\` with componentName from metadata` : `Skip source code (user requested false)`}`,
+      ``,
+      `## Output Format (MUST)`,
+      `### Overview`,
+      `- What the component does (1-2 sentences)`,
+      `- Key features (3-5 bullets)`,
+      `- When to use it (1-2 sentences)`,
+      ``,
+      `### Installation`,
+      `- Required dependencies (exact package names and versions if available)`,
+      `- Setup steps for ${framework}`,
+      ``,
+      `### Basic Usage`,
+      `- Minimal working example (copy-paste ready)`,
+      `- Explain each prop/option used`,
+      ``,
+      `### Configuration`,
+      `- Available props/options (from docs)`,
+      `- Common customization patterns`,
+      ``,
+      `### Advanced Examples`,
+      `- 2-3 real-world use cases`,
+      `- Complex scenarios with code`,
+      ``,
+      `### Integration with ${framework}`,
+      `- Framework-specific setup (if ${framework} !== 'general')`,
+      `- File structure recommendations`,
+      `- Import/export patterns`,
+      ``,
+      `### Styling & Customization`,
+      `- How to customize appearance`,
+      `- Theming options (if available)`,
+      `- CSS/styling approach`,
+      ``,
+      `### Best Practices`,
+      `- Performance tips`,
+      `- Common pitfalls to avoid`,
+      `- Accessibility considerations`,
+      ``,
+      `### Troubleshooting`,
+      `- Common issues and solutions`,
+      `- Debugging tips`,
+      ``,
+      `Make the guide practical, actionable, and easy to follow. Include real code examples from the source when available.`,
+    ]
+      .filter(Boolean)
+      .join("\n");
+
+    return {
+      messages: [
+        {
+          role: "user",
+          content: { type: "text", text: instructions },
+        },
+      ],
+    };
+  }
+);
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
