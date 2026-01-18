@@ -334,7 +334,7 @@ server.prompt(
   },
   async ({ requirements, tags, maxCandidates = "3" }) => {
     const tagText = tags || "";
-    const maxCandidatesNum = parseInt(maxCandidates, 10) || 3;
+    const maxCandidatesNum = Math.max(1, Math.min(10, parseInt(maxCandidates, 10) || 3));
 
     const instructions = [
       `# Component Search Request`,
