@@ -104,6 +104,65 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 
 ---
 
+## 💬 Prompts
+
+The MCP server also provides **reusable prompt templates** that guide AI assistants to perform complex tasks using the available tools.
+
+### 🎯 `find_component`
+
+Help find the best ui-layouts component(s) for specific requirements, use cases, or design needs.
+
+**Parameters:**
+- `requirements`: What you need (e.g. 'collapsible content sections with smooth animation')
+- `tags` (optional): Comma-separated tags to filter by (e.g. 'interactive,layout')
+- `maxCandidates` (optional): Max candidates to fetch docs for (default: '3', range: 1-10)
+
+**What it does:**
+- Generates multiple search queries with synonyms
+- Calls `search_components` multiple times and merges results
+- Fetches documentation for top candidates using `get_docs`
+- Provides structured recommendations with:
+  - **Recommended**: name/key/href/tags, why, trade-offs
+  - **Alternatives**: 1-3 alternative options
+  - **Next steps**: Exact tool calls to continue
+
+**Strategy:**
+- Uses intelligent search with synonyms (e.g. accordion/collapse/disclosure)
+- Prioritizes components matching provided tags
+- Ranks by relevance and compares multiple candidates
+
+---
+
+### 🛠️ `implement_component`
+
+Get a step-by-step implementation guide for a ui-layouts component, including code examples, integration steps, and best practices.
+
+**Parameters:**
+- `componentKey` (optional): Component key (e.g. 'accordion', 'sparkles-title')
+- `componentHref` (optional): Component href (e.g. '/components/accordion')
+- `framework` (optional): Target framework (e.g. 'react', 'next', 'vite', 'general', default: 'react')
+- `includeSourceCode` (optional): Whether to include source code ('true' or 'false', default: 'true')
+
+**What it does:**
+- Fetches component documentation, metadata, and optionally source code
+- Generates a comprehensive implementation guide with:
+  - **Overview**: Component purpose, features, and when to use
+  - **Installation**: Dependencies and setup for the target framework
+  - **Basic Usage**: Minimal working example with explanations
+  - **Configuration**: Available props and customization options
+  - **Advanced Examples**: Real-world use cases with code
+  - **Integration**: Framework-specific setup and patterns
+  - **Styling & Customization**: Theming and appearance customization
+  - **Best Practices**: Performance tips, accessibility, common pitfalls
+  - **Troubleshooting**: Common issues and solutions
+
+**Output:**
+- Practical, copy-paste ready code examples
+- Framework-specific integration guidance
+- Real code from source when available
+
+---
+
 ## 🔗 Recommended Workflow
 
 > 💡 **Tip:** Combine these tools for a full exploration experience:
@@ -122,7 +181,7 @@ The tool reads the `files[].content` field from the JSON registry and returns th
 
 - **MCP server name (alias):** `ui-layouts-mcp`
 - **npm package:** `@ui-layouts/mcp`
-- **Version:** `0.2.0`
+- **Version:** `0.2.1-0`
 - **Transport:** `stdio`
 - **Base URL:** [https://ui-layouts.com](https://ui-layouts.com)
 
