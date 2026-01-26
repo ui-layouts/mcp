@@ -181,7 +181,7 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 
 - **MCP server name (alias):** `ui-layouts-mcp`
 - **npm package:** `@ui-layouts/mcp`
-- **Version:** `0.2.1-0`
+- **Version:** `0.3.0`
 - **Transport:** `stdio`
 - **Base URL:** [https://ui-layouts.com](https://ui-layouts.com)
 
