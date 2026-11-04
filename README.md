@@ -61,12 +61,15 @@ It performs intelligent matching to find components that meet your criteria and 
 
 ### 📘 `get_docs`
 
-Fetch the **complete documentation** for a component from **ui-layouts.com**.
-You can choose how much content to return, including:
+Fetch the **complete documentation** for a component as raw **MDX markdown**, read from the ui-layouts source repo on GitHub.
+Installation commands, props tables, and structure snippets come through as-is. Example previews appear as tags such as `<ComponentCodePreview name="..." />`. Pass that `name` to `get_source_code` to get the example code.
 
-- `raw_html` — the original HTML of the documentation page
-- `text` — plain text extracted from HTML
-- `snippet` — the main section (e.g. `<article>` or `<main>` content only)
+**Parameters**
+
+- `key` — component key (e.g. `accordion`)
+- `href` — component href (e.g. `/components/accordion`), used when `key` is omitted
+- `maxChars` — max characters of markdown to return (default `20000`)
+- `timeoutMs` — fetch timeout in milliseconds (default `7000`)
 
 **When it's useful**
 
@@ -171,7 +174,7 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 | Step | Description                               | Example                                                          |
 | ---- | ----------------------------------------- | ---------------------------------------------------------------- |
 | ①    | Find components matching a keyword or tag | `search_components { "q": "accordion" }`                         |
-| ②    | Fetch their documentation (HTML/Text)     | `get_docs { "key": "accordion", "format": "snippet" }`           |
+| ②    | Fetch their documentation (MDX)           | `get_docs { "key": "accordion" }`                                |
 | ③    | Retrieve metadata & component links       | `get_component_meta { "key": "accordion" }`                      |
 | ④    | Get TSX source code from registry         | `get_source_code { "componentName": "single-layout-accordion" }` |
 
