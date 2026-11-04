@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/index.js",
-    "dev": "pnpm run build && pnpm start",
-    "prepublishOnly": "pnpm run build",
+    "dev": "bun run build && bun start",
+    "prepublishOnly": "bun run build",
     "release": "release-it",
     "release:dry-run": "release-it --dry-run"
   },
