@@ -22,6 +22,7 @@ export function registerTools(server: McpServer) {
     {
       q: z
         .string()
+        .trim()
         .min(1)
         .describe("Query for component name/key/group/tags/href"),
       limit: z.number().int().min(1).max(100).optional().default(20),
@@ -100,6 +101,7 @@ export function registerTools(server: McpServer) {
               text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
             },
           ],
+          isError: true,
         };
       }
 
@@ -111,6 +113,7 @@ export function registerTools(server: McpServer) {
           content: [
             { type: "text", text: `⚠️ Failed to fetch docs from: ${url}` },
           ],
+          isError: true,
         };
       }
 
@@ -175,6 +178,7 @@ export function registerTools(server: McpServer) {
               text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
             },
           ],
+          isError: true,
         };
       }
 
@@ -188,6 +192,7 @@ export function registerTools(server: McpServer) {
               text: `⚠️ Failed to fetch metadata from: ${fullUrl}`,
             },
           ],
+          isError: true,
         };
       }
 
@@ -255,7 +260,8 @@ export function registerTools(server: McpServer) {
     {
       componentName: z
         .string()
-        .optional()
+        .trim()
+        .min(1)
         .describe(
           "Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"
         ),
@@ -263,12 +269,6 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ componentName, timeoutMs, maxChars }) => {
-      if (!componentName) {
-        return {
-          content: [{ type: "text", text: `⚠️ Component name is required` }],
-        };
-      }
-
       const jsonUrl = `${BASE_URL}/r/${componentName}.json`;
 
       const json = await fetchJson<any>(jsonUrl, timeoutMs);
@@ -277,6 +277,7 @@ export function registerTools(server: McpServer) {
           content: [
             { type: "text", text: `⚠️ Failed to fetch from: ${jsonUrl}` },
           ],
+          isError: true,
         };
       }
 
@@ -284,6 +285,7 @@ export function registerTools(server: McpServer) {
       if (!content) {
         return {
           content: [{ type: "text", text: `⚠️ No content found in ${jsonUrl}` }],
+          isError: true,
         };
       }
 

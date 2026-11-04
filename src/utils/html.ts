@@ -24,15 +24,35 @@ export function toAbsoluteUrl(maybeUrl?: string, base?: string) {
   }
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: "&",
+  lt: "<",
+  gt: ">",
+  quot: '"',
+  apos: "'",
+  nbsp: "\u00a0",
+};
+
+function decodeEntities(s: string): string {
+  return s.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, code: string) => {
+    if (code[0] !== "#") return NAMED_ENTITIES[code.toLowerCase()] ?? match;
+    const n = /^#x/i.test(code) ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10);
+    return n <= 0x10ffff ? String.fromCodePoint(n) : match;
+  });
+}
+
 export function extractMetaFromHtml(html: string, url: string): RemoteMeta {
-  const get = (re: RegExp) => html.match(re)?.[1]?.trim();
+  const get = (re: RegExp) => {
+    const raw = html.match(re)?.[1];
+    return raw === undefined ? undefined : decodeEntities(raw.trim());
+  };
   
   const getAll = (re: RegExp): Array<{ name: string; content: string }> => {
     const results: Array<{ name: string; content: string }> = [];
     const matches = html.matchAll(re);
     for (const match of matches) {
       if (match[1] && match[2]) {
-        results.push({ name: match[1].trim(), content: match[2].trim() });
+        results.push({ name: match[1].trim(), content: decodeEntities(match[2].trim()) });
       }
     }
     return results;
@@ -99,7 +119,7 @@ export function htmlToText(html: string): string {
                 .replace(/<style[\s\S]*?<\/style>/gi, "");
   out = out.replace(/<\/(p|div|section|article|h[1-6]|li|br|main|header|footer)>/gi, "$&\n");
 
-  out = out.replace(/<[^>]+>/g, "");
+  out = decodeEntities(out.replace(/<[^>]+>/g, ""));
   out = out.replace(/\r?\n\s*\n\s*\n+/g, "\n\n").trim();
   return out;
 }

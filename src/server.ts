@@ -7,12 +7,7 @@ export function createServer(): McpServer {
   const server = new McpServer({
     name: "@ui-layouts/mcp",
     version: pkg.version,
-    capabilities: {
-      resources: {},
-      tools: {},
-      prompts: {},
-    },
-  } as any);
+  });
 
   registerTools(server);
   registerPrompts(server);
