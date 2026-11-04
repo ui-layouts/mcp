@@ -33,7 +33,7 @@ export async function fetchRemoteMetaHTML(url: string, timeoutMs = 7000) {
     return null;
   }
 }
-export async function fetchHtml(
+export async function fetchText(
   url: string,
   timeoutMs = 7000
 ): Promise<string | null> {
@@ -44,7 +44,7 @@ export async function fetchHtml(
       signal: ctrl.signal,
       headers: {
         "User-Agent": UA,
-        Accept: "text/html,application/xhtml+xml",
+        Accept: "text/plain,text/html;q=0.9,*/*;q=0.8",
       },
     });
     clearTimeout(t);

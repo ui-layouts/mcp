@@ -6,14 +6,15 @@ import {
 } from "./registry.js";
 import {
   buildRemoteUrl,
-  fetchHtml,
+  fetchText,
   fetchRemoteMetaHTML,
   fetchJson,
 } from "./utils/api.js";
-import { extractMainSection, htmlToText } from "./utils/html.js";
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
+const DOCS_SOURCE_BASE =
+  "https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content";
 
 export function registerTools(server: McpServer) {
   server.tool(
@@ -75,19 +76,17 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_docs",
-    "Fetch docs HTML for a component from ui-layouts.com and return as raw_html, plain text, or a main-section snippet.",
+    "Fetch the docs of a component as MDX markdown from the ui-layouts source repo. Example previews in the docs reference a name; fetch their code with get_source_code.",
     {
       key: z.string().optional().describe("DocsCategoryKey (e.g. 'accordion')"),
       href: z
         .string()
         .optional()
         .describe("DocsNavigationCategory href (e.g. '/components/accordion')"),
-      pathPrefix: z.string().nullable().optional().default(null),
-      format: z.enum(["raw_html", "text", "snippet"]).optional().default("text"),
-      maxChars: z.number().int().min(200).max(200000).optional().default(8000),
+      maxChars: z.number().int().min(200).max(200000).optional().default(20000),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
-    async ({ key, href, pathPrefix, format, maxChars, timeoutMs }) => {
+    async ({ key, href, maxChars, timeoutMs }) => {
       let item: DocsNavigationCategory | undefined;
       if (key) item = DocsNavigationCategories.find((c) => c.key === key);
       if (!item && href)
@@ -105,26 +104,16 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const url = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+      const url = `${DOCS_SOURCE_BASE}${item.href}.mdx`;
 
-      const html = await fetchHtml(url, timeoutMs);
-      if (!html) {
+      const mdx = await fetchText(url, timeoutMs);
+      if (!mdx) {
         return {
           content: [
-            { type: "text", text: `⚠️ Failed to fetch docs from: ${url}` },
+            { type: "text", text: `⚠️ Failed to fetch docs source from: ${url}` },
           ],
           isError: true,
         };
-      }
-
-      let output: string;
-      if (format === "raw_html") {
-        output = html.slice(0, maxChars);
-      } else if (format === "snippet") {
-        const section = extractMainSection(html);
-        output = htmlToText(section).slice(0, maxChars);
-      } else {
-        output = htmlToText(html).slice(0, maxChars);
       }
 
       const header = [
@@ -132,17 +121,13 @@ export function registerTools(server: McpServer) {
         `- **name**: ${item.name}`,
         `- **key**: \`${item.key}\``,
         `- **href**: \`${item.href}\``,
-        `- **url**: ${url}`,
-        `- **format**: ${format}`,
+        `- **source**: ${url}`,
         `- **maxChars**: ${maxChars}`,
         "",
       ].join("\n");
 
-      const body =
-        format === "raw_html" ? "```html\n" + output + "\n```" : output;
-
       return {
-        content: [{ type: "text", text: header + body }],
+        content: [{ type: "text", text: header + mdx.slice(0, maxChars) }],
       };
     }
   );
