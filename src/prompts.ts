@@ -44,9 +44,7 @@ export function registerPrompts(server: McpServer) {
         `   - Include synonyms (e.g. accordion/collapse/disclosure, tooltip/popover, modal/dialog, etc.)`,
         `2) Call \`search_components\` multiple times using those queries (limit ~20). Merge and dedupe results.`,
         tagText ? `3) If tags are provided, prioritize matches containing those tags.` : `3) Rank by relevance (name/key/group/tags/href).`,
-        `4) Select top ${maxCandidatesNum} candidates. For each, call \`get_docs\` with:`,
-        `   - format: "snippet"`,
-        `   - maxChars: 6000`,
+        `4) Select top ${maxCandidatesNum} candidates. For each, call \`get_docs\` with the candidate's key.`,
         `5) Compare candidates and produce a recommendation.`,
         ``,
         `## Output format (MUST)`,
@@ -139,12 +137,10 @@ export function registerPrompts(server: McpServer) {
         `## Required Tool Calls`,
         `1) Call \`get_docs\` with:`,
         `   - key: "${item.key}"`,
-        `   - format: "snippet"`,
-        `   - maxChars: 8000`,
         `2) Call \`get_component_meta\` with:`,
         `   - key: "${item.key}"`,
         shouldIncludeSource
-          ? `3) Call \`get_source_code\` with componentName from metadata`
+          ? `3) Call \`get_source_code\` for the component (componentName from metadata) and for every preview name in the docs (the \`name\` of each \`<ComponentCodePreview>\`, \`<BoxComponentPreview>\`, or \`<CodeSnippets>\` tag).`
           : `3) Skip source code (user requested false)`,
         ``,
         `## Output Format (MUST)`,
