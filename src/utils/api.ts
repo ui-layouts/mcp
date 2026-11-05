@@ -3,17 +3,6 @@ import pkg from "../../package.json" with { type: "json" };
 
 const UA = `@ui-layouts/mcp/${pkg.version} (+mcp)`;
 
-export function buildRemoteUrl(
-  baseUrl: string,
-  href: string,
-  pathPrefix?: string | null
-) {
-  const base = baseUrl.replace(/\/+$/, "");
-  const prefix = pathPrefix ? `/${pathPrefix.replace(/^\/+|\/+$/g, "")}` : "";
-  const cleanHref = href.startsWith("/") ? href : `/${href}`;
-  return `${base}${prefix}${cleanHref}`;
-}
-
 export async function fetchRemoteMetaHTML(url: string, timeoutMs = 7000) {
   try {
     const ctrl = new AbortController();
