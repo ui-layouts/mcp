@@ -13,17 +13,6 @@ export type FetchResult<T> =
   | { ok: true; value: T }
   | { ok: false; failure: FetchFailure };
 
-export function buildRemoteUrl(
-  baseUrl: string,
-  href: string,
-  pathPrefix?: string | null
-) {
-  const base = baseUrl.replace(/\/+$/, "");
-  const prefix = pathPrefix ? `/${pathPrefix.replace(/^\/+|\/+$/g, "")}` : "";
-  const cleanHref = href.startsWith("/") ? href : `/${href}`;
-  return `${base}${prefix}${cleanHref}`;
-}
-
 export async function fetchResource<T>(
   url: string,
   parse: (res: Response) => Promise<T>,
