@@ -1,0 +1,24 @@
+name: Registry sync
+
+on:
+  schedule:
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Registry matches the site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - run: node scripts/generate-registry.mjs
+      - name: Fail when the site changed (run pnpm generate:registry and commit the result)
+        run: git diff --exit-code -- src/registry.generated.json

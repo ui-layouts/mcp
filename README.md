@@ -200,6 +200,8 @@ pnpm generate:registry
 
 The script reads the site's docs navigation, MDX pages, and `registry.json` from `main`, prints a summary, and exits non-zero when the site's format no longer matches. Commit the regenerated file.
 
+The `Registry sync` workflow runs the script every Monday and fails when the committed file no longer matches the site.
+
 ---
 
 ### 🧠 Example Usage in Cursor / Claude
