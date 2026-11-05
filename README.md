@@ -48,14 +48,21 @@ This registers the MCP server under the CLI-safe name `ui-layouts-mcp` while sti
 
 ### 🔍 `search_components`
 
-Search through the **ui-layouts.com** component registry by component name, key, group, or tags.
-It performs intelligent matching to find components that meet your criteria and returns detailed information about each match.
+Search the **ui-layouts.com** docs pages, blocks sections, and registry item names.
+Results are ranked, best match first. A query can have several words (e.g. `drag and drop`), and an entry that matches more of them ranks higher. Separators do not matter, so `datepicker` finds `date picker`.
+
+Each result lists the registry items that matched the query. Registry items that belong to no docs page are listed separately. Pass any of these names to `get_source_code`.
+
+**Parameters**
+
+- `q` — one or more words, matched against name, key, group, tags, and registry item names
+- `limit` — max results to return (default `20`, max `100`). The header shows how many matched in total (e.g. `20 of 31`)
 
 **When it's useful**
 
-- To find a specific UI component by name or tag
+- To find a specific UI component or block by name or tag
+- To find which entry a registry item (e.g. `btn-bg-shine`) belongs to
 - To explore available components by category
-- To discover components with particular design or functional features
 
 ---
 

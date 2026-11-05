@@ -1,6 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { entries, findEntry, hrefOf, RegistryEntry } from "./registry.js";
+import { entries, findEntry, hrefOf, unlisted } from "./registry.js";
+import { search } from "./search.js";
 import {
   buildRemoteUrl,
   fetchText,
@@ -8,7 +9,6 @@ import {
   fetchJson,
 } from "./utils/api.js";
 
-const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
 const DOCS_SOURCE_BASE =
   "https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content";
@@ -16,53 +16,51 @@ const DOCS_SOURCE_BASE =
 export function registerTools(server: McpServer) {
   server.tool(
     "search_components",
-    "Search ui-layouts components by name / key / group / tags.",
+    "Search ui-layouts docs pages, blocks sections, and registry item names. Results are ranked, best match first. A query can have several words, and an entry that matches more of them ranks higher.",
     {
       q: z
         .string()
         .trim()
         .min(1)
-        .describe("Query for component name/key/group/tags"),
+        .describe(
+          "One or more words matched against name, key, group, tags, and registry item names (e.g. 'accordion', 'drag and drop', 'btn-bg-shine')"
+        ),
       limit: z.number().int().min(1).max(100).optional().default(20),
     },
     async ({ q, limit }) => {
-      const query = norm(q);
-
-      const results: RegistryEntry[] = [];
-      for (const item of entries) {
-        const haystacks = [
-          item.name,
-          item.key,
-          item.group,
-          ...(item.tags ?? []),
-        ]
-          .filter(Boolean)
-          .map(norm);
-
-        if (haystacks.some((h) => h.includes(query))) {
-          results.push(item);
-        }
-        if (results.length >= limit) break;
-      }
+      const found = search(q, entries, unlisted);
+      const hits = found.hits.slice(0, limit);
+      const names = (list: string[]) =>
+        list.map((name) => `\`${name}\``).join(", ");
 
       const lines =
-        results.length === 0
+        hits.length === 0 && found.unlisted.length === 0
           ? ["- No matching components."]
-          : results.map(
-              (c) =>
+          : hits.map(
+              ({ entry: c, items }) =>
                 `- **${c.name}**  \n  - key: \`${c.key}\`  \n  - group: ${
                   c.group
                 }  \n  - href: \`${hrefOf(c)}\`${
                   c.tags?.length ? `  \n  - tags: ${c.tags.join(", ")}` : ""
-                }`
+                }${items.length ? `  \n  - matched items: ${names(items)}` : ""}`
             );
+      if (found.unlisted.length) {
+        lines.push(
+          "",
+          "## Registry items without a docs page",
+          "",
+          `Pass these names straight to get_source_code: ${names(
+            found.unlisted
+          )}`
+        );
+      }
 
       return {
         content: [
           {
             type: "text",
-            text: `# Search Results (${
-              results.length
+            text: `# Search Results (${hits.length} of ${
+              found.hits.length
             }) for "${q}"\n\n${lines.join("\n")}`,
           },
         ],
