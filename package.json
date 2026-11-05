@@ -7,8 +7,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/src/index.js",
-    "dev": "bun run build && bun start",
-    "prepublishOnly": "bun run build"
+    "dev": "pnpm build && pnpm start",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
