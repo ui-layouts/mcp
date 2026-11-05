@@ -96,7 +96,7 @@ and even custom metadata like `component-names` and `available-components`.
 ### 💾 `get_source_code`
 
 Fetch the **actual TypeScript/React source code** of a component directly from
-[`https://ui-layouts.com/r/{component}.json`](https://ui-layouts.com/r/accordion.json).
+[`https://www.ui-layouts.com/r/{component}.json`](https://www.ui-layouts.com/r/accordion.json).
 The tool reads the `files[].content` field from the JSON registry and returns the `.tsx` implementation.
 
 **When it's useful**
@@ -185,7 +185,7 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 - **MCP server name (alias):** `ui-layouts-mcp`
 - **npm package:** `@ui-layouts/mcp`
 - **Transport:** `stdio`
-- **Base URL:** [https://ui-layouts.com](https://ui-layouts.com)
+- **Base URL:** [https://www.ui-layouts.com](https://www.ui-layouts.com)
 
 ---
 

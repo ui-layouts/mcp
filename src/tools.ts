@@ -12,7 +12,7 @@ import {
 } from "./utils/api.js";
 
 const norm = (s: string) => s.toLowerCase().trim();
-const BASE_URL = "https://ui-layouts.com";
+const BASE_URL = "https://www.ui-layouts.com";
 const DOCS_SOURCE_BASE =
   "https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content";
 
@@ -134,7 +134,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_component_meta",
-    "Fetch remote HTML metadata from https://ui-layouts.com by calling https://ui-layouts.com/<pathPrefix>/<registry.href>.",
+    `Fetch remote HTML metadata from ${BASE_URL} by calling ${BASE_URL}/<pathPrefix>/<registry.href>.`,
     {
       key: z
         .string()
@@ -241,7 +241,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_source_code",
-    "Fetch component source code bundle from https://ui-layouts.com/r/{key}.json (or custom filename), list files and optionally return a specific file content.",
+    `Fetch component source code bundle from ${BASE_URL}/r/{key}.json (or custom filename), list files and optionally return a specific file content.`,
     {
       componentName: z
         .string()
