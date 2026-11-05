@@ -4,12 +4,7 @@ import {
   DocsNavigationCategories,
   DocsNavigationCategory,
 } from "./registry.js";
-import {
-  buildRemoteUrl,
-  fetchText,
-  fetchRemoteMetaHTML,
-  fetchJson,
-} from "./utils/api.js";
+import { fetchText, fetchRemoteMetaHTML, fetchJson } from "./utils/api.js";
 
 const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://ui-layouts.com";
@@ -134,7 +129,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_component_meta",
-    "Fetch remote HTML metadata from https://ui-layouts.com by calling https://ui-layouts.com/<pathPrefix>/<registry.href>.",
+    "Fetch the HTML metadata (title, description, keywords, Open Graph, Twitter card) of a component's page on https://ui-layouts.com.",
     {
       key: z
         .string()
@@ -146,10 +141,9 @@ export function registerTools(server: McpServer) {
         .describe(
           "DocsNavigationCategory href (e.g. '/components/sparkles-title')"
         ),
-      pathPrefix: z.string().nullable().optional().default(null),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
-    async ({ key, href, pathPrefix, timeoutMs }) => {
+    async ({ key, href, timeoutMs }) => {
       let item: DocsNavigationCategory | undefined;
       if (key) item = DocsNavigationCategories.find((c) => c.key === key);
       if (!item && href)
@@ -167,7 +161,7 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+      const fullUrl = `${BASE_URL}${item.href}`;
       const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
       if (!meta) {
         return {
