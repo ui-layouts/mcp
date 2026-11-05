@@ -1,0 +1,1743 @@
+{
+  "entries": [
+    {
+      "kind": "component",
+      "key": "mac-genie",
+      "name": "Mac-Genie",
+      "group": "Visual Effects",
+      "tags": [
+        "Mac-Genie",
+        "mac genie",
+        "mac genie component",
+        "mac genie card",
+        "mac genie weather",
+        "mac genie weather component",
+        "mac genie notification",
+        "mac genie notification component",
+        "mac genie mobile icons",
+        "mac genie mobile icons component",
+        "mac genie sidebar menu",
+        "mac genie sidebar menu component"
+      ],
+      "items": [
+        "mac-genie"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "liquid-glass",
+      "name": "Liquid-Glass",
+      "group": "Visual Effects",
+      "tags": [
+        "Liquid-Glass",
+        "liquid glass",
+        "liquid glass component",
+        "liquid glass card",
+        "liquid glass weather",
+        "liquid glass weather component",
+        "liquid glass notification",
+        "liquid glass notification component",
+        "liquid glass mobile icons",
+        "liquid glass mobile icons component",
+        "liquid glass sidebar menu",
+        "liquid glass sidebar menu component"
+      ],
+      "items": [
+        "liquid-glass",
+        "liquid-glass-sidebar-menu",
+        "liquid-glass-weather",
+        "liquid-glass-mobile-icons",
+        "liquid-glass-notification"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "swapy",
+      "name": "Swapy Drag",
+      "group": "Animation & Motion",
+      "tags": [
+        "Swapy drag",
+        "swapy draggable",
+        "swapy items",
+        "swapy sortable",
+        "swapy list"
+      ],
+      "items": [
+        "swapy",
+        "default-swapy",
+        "swapy-handle",
+        "opacity-swapy",
+        "swapy-without-components"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "dialog",
+      "name": "Dialog",
+      "group": "Overlays",
+      "tags": [
+        "dialog",
+        "popup",
+        "modal",
+        "UI-component"
+      ],
+      "items": [
+        "dialog",
+        "dialog-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "color-picker",
+      "name": "Color Picker",
+      "group": "Forms",
+      "tags": [],
+      "items": [
+        "color-picker",
+        "default-color-picker",
+        "raws-color-picker"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "buttons",
+      "name": "Buttons",
+      "group": "Forms",
+      "tags": [],
+      "items": [
+        "btn-bg-shine",
+        "btn-animated-gradient",
+        "button-active",
+        "button-hover-right",
+        "btn-creative-right",
+        "btn-creative-top",
+        "btn-click-down",
+        "btn-hover-down",
+        "btn-hover-multiple",
+        "btn-hover-underline",
+        "btn-hover-top-flip",
+        "btn-hover-left-flip",
+        "btn-hover-top-slowflip",
+        "btn-text-change",
+        "btn-cross-arrow",
+        "btn-black-shadow",
+        "btn-hover-outline",
+        "btn-hover14",
+        "btn-rotating-gradient"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "noise",
+      "name": "Noise",
+      "group": "Visual Effects",
+      "tags": [
+        "noise",
+        "effect",
+        "visual",
+        "distortion",
+        "shader"
+      ],
+      "items": [
+        "noise-effect"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "globe",
+      "name": "Globe",
+      "group": "3D & Visuals",
+      "tags": [
+        "threejs",
+        "3d globe",
+        "r3f globe",
+        "cobe",
+        "code globe example"
+      ],
+      "items": [
+        "globe",
+        "card-globe",
+        "card-globe-white",
+        "sparkles-globe"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "footers",
+      "name": "Footers",
+      "group": "Layout",
+      "tags": [
+        "footer",
+        "animation",
+        "logo",
+        "branding",
+        "animated",
+        "hover",
+        "interactive"
+      ],
+      "items": [
+        "animated-logo-footer",
+        "hover-footer"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "buy-me-coffee",
+      "name": "Buy Me A Coffee",
+      "group": "Cards & Highlights",
+      "tags": [
+        "Sponser",
+        "Buy me a coffee",
+        "co-fi",
+        "Buy-me-a-coffee",
+        "supports"
+      ],
+      "items": [
+        "buyme-acoffee"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "drag-items",
+      "name": "Drag Items",
+      "group": "Animation & Motion",
+      "tags": [
+        "drag",
+        "draggable",
+        "items",
+        "sortable",
+        "list"
+      ],
+      "items": [
+        "drag-items"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-ripple-effect",
+      "name": "Img Ripple Effect",
+      "group": "3D & Visuals",
+      "tags": [
+        "img-ripple-effect",
+        "image ripple effect",
+        "images-ripple-effect",
+        "threejs ripple effect",
+        "React three Fiber Ripple Effect"
+      ],
+      "items": [
+        "img-ripple-effect"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "r3f-blob",
+      "name": "R3F Blob",
+      "group": "3D & Visuals",
+      "tags": [
+        "r3f-blob",
+        "threejs blob",
+        "animated blob",
+        "blob"
+      ],
+      "items": [
+        "r3f-blob"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "mesh-gradients",
+      "name": "Mesh Gradients",
+      "group": "3D & Visuals",
+      "tags": [
+        "mesh-gradient",
+        "Mesh Gradients",
+        "Gradients",
+        "r3f gradients",
+        "threejs gradients"
+      ],
+      "items": [
+        "mesh-shadergradient",
+        "mesh-gradient-background3",
+        "mesh-gradient-background2",
+        "mesh-gradient-background"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "blur-vignette",
+      "name": "Blur Vignette",
+      "group": "Visual Effects",
+      "tags": [
+        "blur-sm",
+        "vignette",
+        "video",
+        "blur-vignette",
+        "background",
+        "overlay",
+        "effect",
+        "media",
+        "visual-effect",
+        "image",
+        "blur-effect",
+        "vignette-img",
+        "fade",
+        "card",
+        "blur-card",
+        "background-effect",
+        "shadow-sm",
+        "card-design"
+      ],
+      "items": [
+        "blur-vignette",
+        "video-blur-vignette",
+        "blur-vignette-video",
+        "blur-vignette-img",
+        "blur-vignette-card"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "motion-number",
+      "name": "Motion Number",
+      "group": "Forms",
+      "tags": [
+        "animation",
+        "number-animation",
+        "input",
+        "input animation",
+        "motion number input",
+        "number-flow",
+        "number flow",
+        "number-increment",
+        "counter",
+        "trading",
+        "motion number trading",
+        "post-effect",
+        "shadcn slider",
+        "animated slider tag",
+        "motion number slider",
+        "number-sequence",
+        "upvotes",
+        "motion number",
+        "motion-number",
+        "like dislikes",
+        "like-dislikes",
+        "downvotes"
+      ],
+      "items": [
+        "motion-number-upvotes",
+        "motion-number-input",
+        "motion-number-slider",
+        "number-flow-trading"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "liquid-gradient",
+      "name": "liquid-gradient",
+      "group": "Visual Effects",
+      "tags": [
+        "uilayouts",
+        "github",
+        "button",
+        "liquid-gradient",
+        "Liquid Gradient",
+        "github-button",
+        "uilayouts github button",
+        "repository",
+        "link",
+        "cta",
+        "stars",
+        "fork",
+        "open-source",
+        "profile"
+      ],
+      "items": [
+        "liquid-gradient",
+        "liquid-button",
+        "liquid-gradient-components"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "range-slider",
+      "name": "Range Slider",
+      "group": "Forms",
+      "tags": [
+        "input slider",
+        "Default range slider",
+        "default-Range-Slider",
+        "animated motion number slider",
+        "motion input slider",
+        "dual range slider",
+        "Dual-Range-Slider",
+        "static range slider",
+        "Static-Range-Slider",
+        "Basic Range-Slider",
+        "Default Range-Slider",
+        "position range slider",
+        "Position-Range-Slider",
+        "Position Range-Slider",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "motion-number-slider",
+        "dual-range-slider",
+        "position-range-slider",
+        "static-range-slider",
+        "slider"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "password",
+      "name": "Password",
+      "group": "Forms",
+      "tags": [
+        "password",
+        "pass",
+        "password hide show icon",
+        "showhide pass",
+        "show/hide pass",
+        "Show/Hide Pass",
+        "Pass Show/Hide",
+        "Pass Strength Indicator",
+        "pass-strength-indicator",
+        "Progress Password Input",
+        "ProgressPasswordInput",
+        "Pass Strength Indicator2",
+        "pass-strength-indicator2",
+        "Progress Password2",
+        "ProgressPasswordInput2",
+        "Strong Pass Hover Indicator",
+        "Hover Indicator",
+        "Divide Progress Password",
+        "Progress Divide Password2",
+        "DivideProgressPasswordInput2",
+        "Inline Pass Indicator",
+        "Password Status Indicator",
+        "Pass Status Indicator",
+        "Status Password",
+        "StatusPasswordInput",
+        "Confirm pass",
+        "Confirm Pass With Indicator",
+        "Confirm Password Check",
+        "Confirm Password",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "showhide-pass",
+        "pass-strengthindicator",
+        "pass-strength-dotted-indicator",
+        "pass-strength-hover-indicator",
+        "pass-strength-inline-indicator",
+        "confirm-pass-check"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "tags-input",
+      "name": "UTube Tags",
+      "group": "Forms",
+      "tags": [
+        "Tags Input",
+        "Tags Edit False",
+        "Youtube Tags",
+        "Github Like Tags",
+        "github tags",
+        "input tags",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "tags-input",
+        "tags-input-components",
+        "tags-input-no-edit"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "phone-input",
+      "name": "Phone Input",
+      "group": "Forms",
+      "tags": [
+        "phone-input",
+        "Phone Input",
+        "Input",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "phone-input",
+        "phone-input-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "datetime-picker",
+      "name": "Datetime Picker",
+      "group": "Forms",
+      "tags": [
+        "time picker",
+        "time-picker",
+        "Time Picker",
+        "date picker",
+        "date-picker",
+        "Date Picker",
+        "date time picker",
+        "date-time picker",
+        "DateTime Picker",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "datetime-input-default",
+        "datetime-input",
+        "time-picker",
+        "date-picker"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "multi-selector",
+      "name": "Multi Selector",
+      "group": "Forms",
+      "tags": [
+        "Multi Selector Input",
+        "Selector Input Tag",
+        "Multiple Selector Input",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "multi-selector",
+        "multi-selector-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "file-upload",
+      "name": "File Upload",
+      "group": "Forms",
+      "tags": [
+        "DropZone input",
+        "File Upload Input",
+        "file-upload",
+        "file upload preview",
+        "chat box upload file",
+        "Chat Box",
+        "Chat-Box",
+        "Img preview",
+        "form component",
+        "input",
+        "user interface"
+      ],
+      "items": [
+        "file-upload",
+        "imgpreview-dropzone",
+        "chat-form-dropzone"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "clip-path",
+      "name": "Clip-Path",
+      "group": "Media & Galleries",
+      "tags": [
+        "clip-path",
+        "creative",
+        "masking",
+        "corporate",
+        "symbolic",
+        "mask"
+      ],
+      "items": [
+        "creative-clippath",
+        "corporate-clippath",
+        "symbolic-clippath",
+        "creative-mask-clippath",
+        "watersplash-clippath"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-masking",
+      "name": "Image Masking",
+      "group": "Media & Galleries",
+      "tags": [
+        "image-masking",
+        "creative",
+        "masking",
+        "animal-image-masking",
+        "Animal Image Masking",
+        "center-image-masking",
+        "background Image Masking",
+        "fixedbg-image-masking",
+        "Fixed BG Image Masking",
+        "Watersplash-image-masking",
+        "Water Splash Image Masking",
+        "BG Image Masking"
+      ],
+      "items": [
+        "creative-imagemasking",
+        "animal-imagemasking",
+        "watersplash-imagemasking",
+        "center-imagemasking",
+        "fixedbg-imagemasking"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "video-masking",
+      "name": "Video Masking",
+      "group": "Media & Galleries",
+      "tags": [
+        "video",
+        "masking",
+        "creative",
+        "splash",
+        "hexagon video masking",
+        "hexagon masking",
+        "hexagon video masking2",
+        "hexagon masking2",
+        "text overlay video",
+        "text-overlay video masking"
+      ],
+      "items": [
+        "creative-videomasking",
+        "splashwater-videomasking",
+        "textoverlay-videomasking",
+        "hexagon-videomasking",
+        "hexagon2-videomasking"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "hover-cards",
+      "name": "Hover cards",
+      "group": "Cards & Highlights",
+      "tags": [
+        "hover",
+        "stripe",
+        "card",
+        "animation",
+        "interaction",
+        "design",
+        "ui",
+        "style",
+        "ui card",
+        "component"
+      ],
+      "items": [
+        "stripecard",
+        "creative-hover-card",
+        "stripecard2",
+        "hovercard1",
+        "hovercard2",
+        "hovercard3",
+        "hovercard4"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "product-cards",
+      "name": "Product-Cards",
+      "group": "Cards & Highlights",
+      "tags": [
+        "product",
+        "card",
+        "ui",
+        "design",
+        "ecommerce",
+        "style",
+        "ui card",
+        "component"
+      ],
+      "items": [
+        "productcard1",
+        "productcard2",
+        "productcard3",
+        "productcard4",
+        "productcard5",
+        "productcard6"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "gradient-border",
+      "name": "gradient-border",
+      "group": "Cards & Highlights",
+      "tags": [
+        "gradient",
+        "border",
+        "card",
+        "background",
+        "style",
+        "design",
+        "ui",
+        "effect",
+        "ui card",
+        "component"
+      ],
+      "items": [
+        "gradient-border"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "spotlight-cards",
+      "name": "Spotlight cards",
+      "group": "Visual Effects",
+      "tags": [
+        "spotlight",
+        "card",
+        "ui",
+        "design",
+        "highlight",
+        "feature",
+        "ui card",
+        "component"
+      ],
+      "items": [
+        "spotlight-card1",
+        "spotlight",
+        "spotlight-card2",
+        "spotlight-card3",
+        "spotlight-card4"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "timeline-animation",
+      "name": "Timeline Animation",
+      "group": "Animation & Motion",
+      "tags": [
+        "timeline-animation",
+        "timeline animation",
+        "animation",
+        "scroll",
+        "motion",
+        "interactive"
+      ],
+      "items": [
+        "timeline-animation",
+        "timeline-animation-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "scroll-animation",
+      "name": "Scroll Animation",
+      "group": "Animation & Motion",
+      "tags": [
+        "scroll",
+        "animation",
+        "element",
+        "repeat",
+        "text",
+        "motion",
+        "interactive"
+      ],
+      "items": [
+        "scroll-animation",
+        "scroll-animation-default",
+        "scroll-animation-repeat",
+        "scroll-animation-text"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "scroll-text",
+      "name": "Scroll Text",
+      "group": "Animation & Motion",
+      "tags": [
+        "scroll",
+        "text",
+        "animation"
+      ],
+      "items": [
+        "scroll-text",
+        "text-scroll-animation"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "scroll-text-marquee",
+      "name": "Text Maruqee",
+      "group": "Animation & Motion",
+      "tags": [
+        "marquee",
+        "text",
+        "animation"
+      ],
+      "items": [
+        "scroll-text-marquee",
+        "scroll-text-marquee-unidirectional",
+        "scroll-text-marquee-bidirectional"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "randomized-text-effect",
+      "name": "Randomized Text",
+      "group": "Animation & Motion",
+      "tags": [
+        "random",
+        "text",
+        "effect"
+      ],
+      "items": [
+        "randomized-text-effect",
+        "randomized-text-unveil"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-mousetrail",
+      "name": "Image Mousetrail",
+      "group": "Animation & Motion",
+      "tags": [
+        "mouse-trail",
+        "animation",
+        "image-effect",
+        "motion-trail",
+        "small-images",
+        "interactive",
+        "disappearing-effect",
+        "interactive-animation",
+        "mouse-motion",
+        "Without Component Mousetrail",
+        "Image Mouse Trail Without Components"
+      ],
+      "items": [
+        "image-mousetrail-default",
+        "mousetrail",
+        "image-mousetrail-small",
+        "image-mousetrail-disappear",
+        "image-mousetrail-without-component"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-reveal",
+      "name": "Image Reveal",
+      "group": "Visual Effects",
+      "tags": [
+        "image",
+        "reveal",
+        "image-reveal",
+        "transition",
+        "animation",
+        "hover-effect",
+        "scroll-reveal",
+        "gallery",
+        "fade-in",
+        "image-reveal2",
+        "scroll",
+        "parallax",
+        "fade"
+      ],
+      "items": [
+        "image-reveal",
+        "image-reveal2"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "progressive-carousel",
+      "name": "Progressive Carousel",
+      "group": "Media & Galleries",
+      "tags": [
+        "carousel",
+        "horizontal",
+        "progressive-carousel",
+        "scroll-carousel",
+        "vertical",
+        "vertical-scroll"
+      ],
+      "items": [
+        "progressive-carousel",
+        "horizontal-progressive-carousel",
+        "vertical-progressive-carousel"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "blocks",
+      "name": "Blocks",
+      "group": "Visual Effects",
+      "tags": [
+        "blocks",
+        "background",
+        "bg-blocks",
+        "layout",
+        "design",
+        "grid",
+        "tiles",
+        "bg-effect"
+      ],
+      "items": [
+        "bg-blocks-one"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "animated-beam",
+      "name": "Animated Beam",
+      "group": "Visual Effects",
+      "tags": [
+        "animated",
+        "beam",
+        "default",
+        "animation",
+        "effect",
+        "motion",
+        "visual",
+        "light-beam",
+        "bidirectional",
+        "light",
+        "visual-motion",
+        "unidirectional",
+        "multiple-input",
+        "data-input",
+        "multiple-output",
+        "visual-output"
+      ],
+      "items": [
+        "animated-beam",
+        "animated-beam-default",
+        "animated-beam-bidirectional",
+        "animated-beam-unidirectional",
+        "animated-beam-multiple-input",
+        "animated-beam-multiple-output"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "media-modal",
+      "name": "Media Modal",
+      "group": "Overlays",
+      "tags": [
+        "media",
+        "modal",
+        "popup",
+        "UI",
+        "image modal"
+      ],
+      "items": [
+        "media-modal",
+        "media-modal-default",
+        "imagemodals"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "linear-modal",
+      "name": "Linear Modal",
+      "group": "Overlays",
+      "tags": [
+        "card",
+        "linear-layout",
+        "linear-modal",
+        "linear-card",
+        "UI-component",
+        "modal-card"
+      ],
+      "items": [
+        "linear-modal",
+        "linear-modal-default",
+        "linear-modal-center-content",
+        "linear-modal-standalone"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "gallery-modal",
+      "name": "Gallery Modal",
+      "group": "Overlays",
+      "tags": [
+        "gallery",
+        "accordion",
+        "modal",
+        "media",
+        "slider",
+        "media-modal",
+        "interactive",
+        "unsplash",
+        "image-gallery"
+      ],
+      "items": [
+        "gallery-modal-accordion",
+        "gallery-modal-unsplash",
+        "gallery-modal-slider"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "responsive-modal",
+      "name": "Responsive Modal",
+      "group": "Overlays",
+      "tags": [
+        "drawer",
+        "responsive drawer",
+        "navigation",
+        "responsive",
+        "menu"
+      ],
+      "items": [
+        "responsive-modal",
+        "responsive-modal-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "directional-drawer",
+      "name": "Directional Drawer",
+      "group": "Overlays",
+      "tags": [
+        "sidebar",
+        "vaul",
+        "navigation",
+        "drawer",
+        "responsive",
+        "Left Sidebar",
+        "right drawer",
+        "top drawer",
+        "bottom drawer",
+        "Left Drawer",
+        "directional drawer",
+        "Responsive Drawer"
+      ],
+      "items": [
+        "directional-drawer",
+        "directional-drawer_default",
+        "left-directional-drawer",
+        "top-directional-drawer",
+        "bottom-directional-drawer"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "motion-drawer",
+      "name": "Motion Drawer",
+      "group": "Overlays",
+      "tags": [
+        "sidebar",
+        "navigation",
+        "drawer",
+        "responsive",
+        "Left Sidebar",
+        "right drawer",
+        "framer-motion drawer",
+        "motion drawer"
+      ],
+      "items": [
+        "motion-drawer",
+        "motion-drawer-default",
+        "right-motion-drawer"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "responsive-header",
+      "name": "Responsive-Header",
+      "group": "Layout",
+      "tags": [
+        "header",
+        "responsive",
+        "navigation-bar",
+        "menu"
+      ],
+      "items": [
+        "responsive-header",
+        "responsive-header-default"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "horizontal-scroll",
+      "name": "Horizontal Scroll",
+      "group": "Animation & Motion",
+      "tags": [
+        "White 3D Globe",
+        "White 3D Globe Card",
+        "horizontal",
+        "scroll",
+        "framer"
+      ],
+      "items": [
+        "horizontal-scroll",
+        "framerhorizontalscroll"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "stacking-card",
+      "name": "Stacking Card",
+      "group": "Animation & Motion",
+      "tags": [
+        "Card Stack",
+        "Interactive Cards",
+        "CSS Stacking",
+        "Details Card",
+        "CSS Image Stack",
+        "Stacking Card"
+      ],
+      "items": [
+        "stacking-card",
+        "css-image-stacking",
+        "css-card-stacking"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "smooth-scroll",
+      "name": "Smooth-Scroll",
+      "group": "Animation & Motion",
+      "tags": [
+        "Smooth Scrolling",
+        "Lenis Smooth Scroll",
+        "Scroll Animation"
+      ],
+      "items": [
+        "smooth-scroll"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "sticky-scroll",
+      "name": "Sticky Scroll",
+      "group": "Animation & Motion",
+      "tags": [
+        "Sticky Scroll",
+        "Section",
+        "Sticky Gallery",
+        "Gallery Scroll",
+        "Sticky Hero",
+        "Hero Section"
+      ],
+      "items": [
+        "sticky-gallery",
+        "sticky-hero-section"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "tabs",
+      "name": "Tabs",
+      "group": "Navigation",
+      "tags": [
+        "tabs",
+        "ui",
+        "navigation",
+        "component",
+        "design",
+        "creative",
+        "form",
+        "registration"
+      ],
+      "items": [
+        "tabs",
+        "creative-tab",
+        "register-tab"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-tabs",
+      "name": "Image Tabs",
+      "group": "Navigation",
+      "tags": [
+        "tabs",
+        "image",
+        "ui",
+        "gallery",
+        "design"
+      ],
+      "items": [
+        "image-tab1",
+        "image-tab2"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "magnified-doc",
+      "name": "Magnified-Doc",
+      "group": "Navigation",
+      "tags": [
+        "tabs",
+        "ui",
+        "magnified",
+        "document",
+        "design"
+      ],
+      "items": [
+        "magnified-doc",
+        "magnified-tab"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "sparkles",
+      "name": "Sparkles",
+      "group": "Animation & Motion",
+      "tags": [
+        "sparkles",
+        "3d globe sparkles",
+        "animation sparkles",
+        "sparkles particle"
+      ],
+      "items": [
+        "sparkles",
+        "sparkles-globe",
+        "sparkles-section",
+        "sparkles-branding"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "sparkles-title",
+      "name": "Sparkles Title",
+      "group": "Animation & Motion",
+      "tags": [
+        "sparkles title",
+        "mousemove sparkles"
+      ],
+      "items": [
+        "sparkles-title",
+        "sparkles-title2",
+        "sparkles-title3",
+        "sparkles-title4"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "carousel",
+      "name": "Carousel",
+      "group": "Media & Galleries",
+      "tags": [
+        "carousel",
+        "default",
+        "slider",
+        "basic-slider",
+        "embla-carousel",
+        "align",
+        "centered",
+        "alignment-slider",
+        "classname",
+        "custom-slider",
+        "themed-slider",
+        "number",
+        "numeric-slider",
+        "counter-slider",
+        "scale",
+        "zoom-slider",
+        "scalable-carousel",
+        "thumbnail",
+        "preview-slider",
+        "image-carousel",
+        "autostart",
+        "auto-slider",
+        "autoplay-carousel"
+      ],
+      "items": [
+        "carousel",
+        "default-slider",
+        "align-slider",
+        "classname-slider",
+        "number-slider",
+        "scale-slider",
+        "thumbnail-slider",
+        "autostart-slider",
+        "autoscroll-slider",
+        "vertical-slider",
+        "vertical-thumbnail-slider",
+        "vertical-thumbnail-autostart-slider"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "framer-carousel",
+      "name": "Framer Carousel",
+      "group": "Media & Galleries",
+      "tags": [
+        "carousel",
+        "motion/react",
+        "animated-carousel",
+        "carousel-2",
+        "carousel-1"
+      ],
+      "items": [
+        "framer-normal-carousel",
+        "framer-draggable-carousel",
+        "framer-autoplay-carousel",
+        "framer-multi-carousel",
+        "framer-thumnbails",
+        "framer-moveable-thumbnails",
+        "framer-drag-sliding-carousel"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "accordion",
+      "name": "Accordion",
+      "group": "Disclosure",
+      "tags": [
+        "accordion",
+        "faqs accordion",
+        "layout",
+        "expandable",
+        "collapsible",
+        "single",
+        "multi"
+      ],
+      "items": [
+        "accordion",
+        "grid-layout-accordion",
+        "single-layout-accordion",
+        "multi-layout-accordion"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "faqs",
+      "name": "FAQs",
+      "group": "Disclosure",
+      "tags": [
+        "accordion",
+        "faq",
+        "questions",
+        "answers",
+        "expandable",
+        "collapsible"
+      ],
+      "items": [
+        "faq-accordion"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "image-accordions",
+      "name": "Image Accordion",
+      "group": "Disclosure",
+      "tags": [
+        "accordion",
+        "image",
+        "hover",
+        "interactive",
+        "expandable",
+        "tailwind",
+        "responsive"
+      ],
+      "items": [
+        "image-hover-accordion",
+        "tailwind-image-accordion"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "grid",
+      "name": "Grid",
+      "group": "Layout",
+      "tags": [
+        "grid",
+        "Normal Grid",
+        "normal grid",
+        "normalgrid",
+        "box grid",
+        "Box Grid",
+        "condition grid",
+        "Contidion Grid",
+        "unsplash grid",
+        "Unsplash Grid"
+      ],
+      "items": [
+        "boxgrid",
+        "conditionGrid",
+        "normalGrid"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "masonary-grid",
+      "name": "Masonary",
+      "group": "Layout",
+      "tags": [
+        "bento grid",
+        "grid",
+        "masonary grid"
+      ],
+      "items": [
+        "unsplash-grid"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "marquee",
+      "name": "Marquee",
+      "group": "Animation & Motion",
+      "tags": [
+        "default",
+        "marquee",
+        "animation",
+        "vertical",
+        "logos",
+        "3d"
+      ],
+      "items": [
+        "marquee",
+        "default-marquee",
+        "verticle-marquee",
+        "logos-marquee",
+        "3d-marquee"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "infinity-brand",
+      "name": "Infinity Brand",
+      "group": "Animation & Motion",
+      "tags": [
+        "infinity",
+        "brand",
+        "marquee"
+      ],
+      "items": [
+        "infintyband"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "shimmer-loader",
+      "name": "Shimmer Loader",
+      "group": "Animation & Motion",
+      "tags": [
+        "shimmer loader",
+        "loading animation",
+        "progress bar",
+        "animated loader",
+        "shimmer effect",
+        "terminal loader",
+        "loading indicator",
+        "progress animation",
+        "shimmer UI",
+        "loading states"
+      ],
+      "items": [
+        "shimmer-loader"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "type-writer",
+      "name": "Type Writer",
+      "group": "Animation & Motion",
+      "tags": [
+        "type writer",
+        "typing animation",
+        "text animation",
+        "typewriter effect",
+        "animated text",
+        "typing effect",
+        "text reveal",
+        "character animation",
+        "typing cursor",
+        "text typing"
+      ],
+      "items": [
+        "type-writter"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "terminal-ui",
+      "name": "Terminal UI",
+      "group": "Animation & Motion",
+      "tags": [
+        "terminal ui",
+        "terminal animation",
+        "console interface",
+        "terminal sequence",
+        "developer tools",
+        "command line",
+        "terminal effects",
+        "intro sequence",
+        "loading terminal",
+        "console animation"
+      ],
+      "items": [
+        "terminal-ui"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "code-block",
+      "name": "Code Block",
+      "group": "Code",
+      "tags": [
+        "code block",
+        "syntax highlighting",
+        "shiki code",
+        "code display",
+        "syntax highlighter",
+        "code formatting",
+        "code presentation",
+        "shiki highlighter",
+        "beautiful code"
+      ],
+      "items": [
+        "code-block",
+        "code-block-comp"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "tree-code-viewer",
+      "name": "Tree Code Viewer",
+      "group": "Code",
+      "tags": [
+        "tree code viewer",
+        "file tree",
+        "code explorer",
+        "multi-file display",
+        "file structure",
+        "code navigation",
+        "file browser",
+        "code organization",
+        "project structure"
+      ],
+      "items": [
+        "tree-code-viewer",
+        "code-tree-code-viewer"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "code-tabs-mdx",
+      "name": "Code Tabs MDX",
+      "group": "Code",
+      "tags": [
+        "code tabs",
+        "tabbed code",
+        "multi-language code",
+        "code snippets",
+        "syntax highlighting tabs",
+        "code comparison",
+        "language tabs",
+        "code organization",
+        "tabbed interface"
+      ],
+      "items": [
+        "code-tabs-mdx"
+      ]
+    },
+    {
+      "kind": "component",
+      "key": "code-tabs",
+      "name": "Code Tabs",
+      "group": "Code",
+      "tags": [
+        "code tabs",
+        "tabbed code",
+        "multi-language code",
+        "code snippets",
+        "syntax highlighting tabs",
+        "code comparison",
+        "language tabs",
+        "code organization",
+        "tabbed interface"
+      ],
+      "items": [
+        "code-tabs"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "hero-section",
+      "name": "Hero Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "hero-digital-success",
+        "hero-ai-value-proposition",
+        "hero-share-app",
+        "hero-social-app",
+        "hero-ai-ecommerce",
+        "hero-ai-infrastructure",
+        "hero-financial"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "feature-section",
+      "name": "Feature Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "feature-flow",
+        "feature-hero",
+        "feature-bento",
+        "feature-nature",
+        "feature-velocity",
+        "feature-highlights",
+        "feature-platform",
+        "feature-service"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "about-section",
+      "name": "About Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "about-ecommerse",
+        "about-creative",
+        "about-me",
+        "about-sass",
+        "about-agency",
+        "about-architecture",
+        "about-mission",
+        "about-bento",
+        "about-business",
+        "about-whyus",
+        "about-vision",
+        "about-experience"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "team-section",
+      "name": "Team Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "team-clippath",
+        "team-classic",
+        "team-expert",
+        "team-magic",
+        "team-modern",
+        "team-social",
+        "team-synth",
+        "team-troops",
+        "team-vr"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "stats-section",
+      "name": "Stats Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "advanced-stats",
+        "stats-banner",
+        "stats-bento",
+        "stats-section",
+        "stats-details",
+        "stats-bold",
+        "stats-minimal"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "testimonial-section",
+      "name": "Testimonial Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "stack-testimonial",
+        "spotlight-testimonial",
+        "messenger-testimonial",
+        "chat-interface-testimonial",
+        "testimonial-basic",
+        "testimonial-carousel",
+        "marque-testimonial"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "experience-section",
+      "name": "Experience Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "impact-experience",
+        "portfolio-experience",
+        "creative-experience",
+        "work-experience",
+        "customer-experience"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "pricing-section",
+      "name": "Pricing Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "growth-plans",
+        "pricing-overview",
+        "pricing-grow-business",
+        "product-packs",
+        "startup-plans",
+        "subscription-details"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "faq-section",
+      "name": "Faq Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "faq-founder",
+        "faq-tabbed-explorer",
+        "faq-glass-card",
+        "faq-interactive-preview",
+        "faq-journey",
+        "faq-minimilastic"
+      ]
+    },
+    {
+      "kind": "block",
+      "key": "footer-section",
+      "name": "Footer Section",
+      "group": "Blocks",
+      "tags": [],
+      "items": [
+        "footer-hero",
+        "footer-bento",
+        "footer-bold",
+        "footer-detailed",
+        "footer-minimal",
+        "footer-privilege",
+        "footer-simple"
+      ]
+    }
+  ],
+  "unlisted": [
+    "btn-arrow-right",
+    "img-tabs-standalone",
+    "animated-tabs",
+    "file-upload-default",
+    "framer-carousel1",
+    "flipcountdown",
+    "special-offer",
+    "nested-vaul-drawer",
+    "sticky-hero-scroll",
+    "demo-spotlight-card2",
+    "demo-spotlight-card3",
+    "demo-spotlight-card4",
+    "spotlight-card-cruip",
+    "tools-tab"
+  ]
+}

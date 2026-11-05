@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/src/index.js",
     "dev": "pnpm build && pnpm start",
+    "generate:registry": "node scripts/generate-registry.mjs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

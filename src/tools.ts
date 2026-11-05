@@ -1,9 +1,6 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  DocsNavigationCategories,
-  DocsNavigationCategory,
-} from "./registry.js";
+import { entries, findEntry, hrefOf, RegistryEntry } from "./registry.js";
 import {
   buildRemoteUrl,
   fetchText,
@@ -19,25 +16,24 @@ const DOCS_SOURCE_BASE =
 export function registerTools(server: McpServer) {
   server.tool(
     "search_components",
-    "Search ui-layouts components by name / key / group / tags / href.",
+    "Search ui-layouts components by name / key / group / tags.",
     {
       q: z
         .string()
         .trim()
         .min(1)
-        .describe("Query for component name/key/group/tags/href"),
+        .describe("Query for component name/key/group/tags"),
       limit: z.number().int().min(1).max(100).optional().default(20),
     },
     async ({ q, limit }) => {
       const query = norm(q);
 
-      const results: DocsNavigationCategory[] = [];
-      for (const item of DocsNavigationCategories) {
+      const results: RegistryEntry[] = [];
+      for (const item of entries) {
         const haystacks = [
           item.name,
           item.key,
           item.group,
-          item.href,
           ...(item.tags ?? []),
         ]
           .filter(Boolean)
@@ -56,7 +52,7 @@ export function registerTools(server: McpServer) {
               (c) =>
                 `- **${c.name}**  \n  - key: \`${c.key}\`  \n  - group: ${
                   c.group
-                }  \n  - href: \`${c.href}\`${
+                }  \n  - href: \`${hrefOf(c)}\`${
                   c.tags?.length ? `  \n  - tags: ${c.tags.join(", ")}` : ""
                 }`
             );
@@ -76,21 +72,18 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_docs",
-    "Fetch the docs of a component as MDX markdown from the ui-layouts source repo. Example previews in the docs reference a name; fetch their code with get_source_code.",
+    "Fetch the docs of a component as MDX markdown from the ui-layouts source repo. The header lists the entry's registry items; pass one of those names to get_source_code. A blocks entry has no docs page and returns only its items.",
     {
-      key: z.string().optional().describe("DocsCategoryKey (e.g. 'accordion')"),
+      key: z.string().optional().describe("Entry key (e.g. 'accordion', 'hero-section')"),
       href: z
         .string()
         .optional()
-        .describe("DocsNavigationCategory href (e.g. '/components/accordion')"),
+        .describe("Entry href (e.g. '/components/accordion', '/blocks/hero-section')"),
       maxChars: z.number().int().min(200).max(200000).optional().default(20000),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, maxChars, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
+      const item = findEntry(key, href);
 
       if (!item) {
         return {
@@ -104,7 +97,20 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const url = `${DOCS_SOURCE_BASE}${item.href}.mdx`;
+      const header = [
+        `# Docs`,
+        `- **name**: ${item.name}`,
+        `- **key**: \`${item.key}\``,
+        `- **href**: \`${hrefOf(item)}\``,
+        `- **items**: ${
+          item.items.map((name) => `\`${name}\``).join(", ") || "(none)"
+        }`,
+      ];
+      if (item.kind === "block") {
+        return { content: [{ type: "text", text: header.join("\n") }] };
+      }
+
+      const url = `${DOCS_SOURCE_BASE}${hrefOf(item)}.mdx`;
 
       const mdx = await fetchText(url, timeoutMs);
       if (!mdx) {
@@ -116,18 +122,12 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const header = [
-        `# Docs`,
-        `- **name**: ${item.name}`,
-        `- **key**: \`${item.key}\``,
-        `- **href**: \`${item.href}\``,
-        `- **source**: ${url}`,
-        `- **maxChars**: ${maxChars}`,
-        "",
-      ].join("\n");
+      header.push(`- **source**: ${url}`, `- **maxChars**: ${maxChars}`, "");
 
       return {
-        content: [{ type: "text", text: header + mdx.slice(0, maxChars) }],
+        content: [
+          { type: "text", text: header.join("\n") + mdx.slice(0, maxChars) },
+        ],
       };
     }
   );
@@ -139,21 +139,18 @@ export function registerTools(server: McpServer) {
       key: z
         .string()
         .optional()
-        .describe("DocsCategoryKey (e.g. 'sparkles-title')"),
+        .describe("Entry key (e.g. 'sparkles-title')"),
       href: z
         .string()
         .optional()
         .describe(
-          "DocsNavigationCategory href (e.g. '/components/sparkles-title')"
+          "Entry href (e.g. '/components/sparkles-title')"
         ),
       pathPrefix: z.string().nullable().optional().default(null),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, pathPrefix, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
+      const item = findEntry(key, href);
 
       if (!item) {
         return {
@@ -167,7 +164,7 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+      const fullUrl = buildRemoteUrl(BASE_URL, hrefOf(item), pathPrefix);
       const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
       if (!meta) {
         return {
@@ -207,7 +204,7 @@ export function registerTools(server: McpServer) {
         `# Remote Metadata`,
         `- **name**: ${item.name}`,
         `- **key**: \`${item.key}\``,
-        `- **href**: \`${item.href}\``,
+        `- **href**: \`${hrefOf(item)}\``,
         `- **url**: ${meta.url}`,
         meta.title ? `- **title**: ${meta.title}` : "",
         meta.description ? `- **description**: ${meta.description}` : "",
@@ -241,14 +238,14 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_source_code",
-    "Fetch component source code bundle from https://ui-layouts.com/r/{key}.json (or custom filename), list files and optionally return a specific file content.",
+    "Fetch component source code bundle from https://ui-layouts.com/r/{componentName}.json (or custom filename), list files and optionally return a specific file content.",
     {
       componentName: z
         .string()
         .trim()
         .min(1)
         .describe(
-          "Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"
+          "Registry item name from the items of get_docs (e.g. 'liquid-glass-weather', 'btn-bg-shine')"
         ),
       maxChars: z.number().int().min(200).max(200000).optional().default(20000),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),

@@ -48,7 +48,7 @@ This registers the MCP server under the CLI-safe name `ui-layouts-mcp` while sti
 
 ### 🔍 `search_components`
 
-Search through the **ui-layouts.com** component registry by component name, key, group, tags, or href.
+Search through the **ui-layouts.com** component registry by component name, key, group, or tags.
 It performs intelligent matching to find components that meet your criteria and returns detailed information about each match.
 
 **When it's useful**
@@ -62,12 +62,13 @@ It performs intelligent matching to find components that meet your criteria and 
 ### 📘 `get_docs`
 
 Fetch the **complete documentation** for a component as raw **MDX markdown**, read from the ui-layouts source repo on GitHub.
-Installation commands, props tables, and structure snippets come through as-is. Example previews appear as tags such as `<ComponentCodePreview name="..." />`. Pass that `name` to `get_source_code` to get the example code.
+Installation commands, props tables, and structure snippets come through as-is. The response header lists the entry's registry `items`. Pass one of those names to `get_source_code` to get the example code.
+A blocks entry (e.g. `hero-section`) has no docs page, so it returns only its `items`.
 
 **Parameters**
 
-- `key` — component key (e.g. `accordion`)
-- `href` — component href (e.g. `/components/accordion`), used when `key` is omitted
+- `key` — entry key (e.g. `accordion`, `hero-section`)
+- `href` — entry href (e.g. `/components/accordion`, `/blocks/hero-section`), used when `key` is omitted
 - `maxChars` — max characters of markdown to return (default `20000`)
 - `timeoutMs` — fetch timeout in milliseconds (default `7000`)
 
@@ -189,12 +190,24 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 
 ---
 
+### 🔄 Regenerating the registry
+
+`src/registry.generated.json` is the index the tools search. It is generated from the [ui-layouts site repo](https://github.com/ui-layouts/uilayouts), so do not edit it by hand.
+
+```bash
+pnpm generate:registry
+```
+
+The script reads the site's docs navigation, MDX pages, and `registry.json` from `main`, prints a summary, and exits non-zero when the site's format no longer matches. Commit the regenerated file.
+
+---
+
 ### 🧠 Example Usage in Cursor / Claude
 
 ```bash
 > call tool search_components { "q": "slider" }
-> call tool get_docs { "key": "align-slider" }
-> call tool get_component_meta { "key": "align-slider" }
+> call tool get_docs { "key": "range-slider" }
+> call tool get_component_meta { "key": "range-slider" }
 > call tool get_source_code { "componentName": "align-slider" }
 ```
 

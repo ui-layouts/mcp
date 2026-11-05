@@ -1,9 +1,6 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  DocsNavigationCategories,
-  DocsNavigationCategory,
-} from "./registry.js";
+import { findEntry, hrefOf } from "./registry.js";
 
 export function registerPrompts(server: McpServer) {
   server.prompt(
@@ -43,7 +40,7 @@ export function registerPrompts(server: McpServer) {
         `1) Generate 3–6 SHORT search queries (single words or short phrases) derived from the requirements.`,
         `   - Include synonyms (e.g. accordion/collapse/disclosure, tooltip/popover, modal/dialog, etc.)`,
         `2) Call \`search_components\` multiple times using those queries (limit ~20). Merge and dedupe results.`,
-        tagText ? `3) If tags are provided, prioritize matches containing those tags.` : `3) Rank by relevance (name/key/group/tags/href).`,
+        tagText ? `3) If tags are provided, prioritize matches containing those tags.` : `3) Rank by relevance (name/key/group/tags).`,
         `4) Select top ${maxCandidatesNum} candidates. For each, call \`get_docs\` with the candidate's key.`,
         `5) Compare candidates and produce a recommendation.`,
         ``,
@@ -98,11 +95,7 @@ export function registerPrompts(server: McpServer) {
       // Normalize includeSourceCode to boolean early
       const shouldIncludeSource = includeSourceCode === "true";
 
-      let item: DocsNavigationCategory | undefined;
-      if (componentKey)
-        item = DocsNavigationCategories.find((c) => c.key === componentKey);
-      if (!item && componentHref)
-        item = DocsNavigationCategories.find((c) => c.href === componentHref);
+      const item = findEntry(componentKey, componentHref);
 
       if (!item) {
         return {
@@ -124,7 +117,7 @@ export function registerPrompts(server: McpServer) {
         `## Target Component`,
         `- **Name**: ${item.name}`,
         `- **Key**: \`${item.key}\``,
-        `- **Href**: \`${item.href}\``,
+        `- **Href**: \`${hrefOf(item)}\``,
         `- **Group**: ${item.group}`,
         item.tags?.length ? `- **Tags**: ${item.tags.join(", ")}` : "",
         `- **Framework**: ${framework}`,
@@ -140,7 +133,7 @@ export function registerPrompts(server: McpServer) {
         `2) Call \`get_component_meta\` with:`,
         `   - key: "${item.key}"`,
         shouldIncludeSource
-          ? `3) Call \`get_source_code\` for the component (componentName from metadata) and for every preview name in the docs (the \`name\` of each \`<ComponentCodePreview>\`, \`<BoxComponentPreview>\`, or \`<CodeSnippets>\` tag).`
+          ? `3) Call \`get_source_code\` with each name in the \`items\` list that \`get_docs\` returns.`
           : `3) Skip source code (user requested false)`,
         ``,
         `## Output Format (MUST)`,
