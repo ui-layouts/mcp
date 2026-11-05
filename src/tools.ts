@@ -3,6 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   DocsNavigationCategories,
   DocsNavigationCategory,
+  findComponent,
 } from "./registry.js";
 import {
   buildRemoteUrl,
@@ -15,6 +16,14 @@ const norm = (s: string) => s.toLowerCase().trim();
 const BASE_URL = "https://www.ui-layouts.com";
 const DOCS_SOURCE_BASE =
   "https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content";
+
+function clip(text: string, maxChars: number) {
+  if (text.length <= maxChars) return { text, notice: "" };
+  return {
+    text: text.slice(0, maxChars),
+    notice: `\n\n[Truncated at maxChars: returned ${maxChars} of ${text.length} chars.]`,
+  };
+}
 
 function failureText(
   failure: FetchFailure,
@@ -107,22 +116,14 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, maxChars, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
-
-      if (!item) {
+      const found = findComponent({ key, href });
+      if ("error" in found) {
         return {
-          content: [
-            {
-              type: "text",
-              text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
-            },
-          ],
+          content: [{ type: "text", text: found.error }],
           isError: true,
         };
       }
+      const { item } = found;
 
       const url = `${DOCS_SOURCE_BASE}${item.href}.mdx`;
 
@@ -143,7 +144,6 @@ export function registerTools(server: McpServer) {
           isError: true,
         };
       }
-      const mdx = fetched.value;
 
       const header = [
         `# Docs`,
@@ -151,12 +151,12 @@ export function registerTools(server: McpServer) {
         `- **key**: \`${item.key}\``,
         `- **href**: \`${item.href}\``,
         `- **source**: ${url}`,
-        `- **maxChars**: ${maxChars}`,
         "",
       ].join("\n");
 
+      const docs = clip(fetched.value, maxChars);
       return {
-        content: [{ type: "text", text: header + mdx.slice(0, maxChars) }],
+        content: [{ type: "text", text: header + docs.text + docs.notice }],
       };
     }
   );
@@ -179,22 +179,14 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, pathPrefix, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
-
-      if (!item) {
+      const found = findComponent({ key, href });
+      if ("error" in found) {
         return {
-          content: [
-            {
-              type: "text",
-              text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
-            },
-          ],
+          content: [{ type: "text", text: found.error }],
           isError: true,
         };
       }
+      const { item } = found;
 
       const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
       const fetched = await fetchResource(
@@ -285,7 +277,10 @@ export function registerTools(server: McpServer) {
       componentName: z
         .string()
         .trim()
-        .min(1)
+        .regex(
+          /^[A-Za-z0-9_-]+$/,
+          "componentName takes letters, digits, '-' and '_' only"
+        )
         .describe(
           "Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"
         ),
@@ -329,13 +324,13 @@ export function registerTools(server: McpServer) {
         `# Source Code`,
         `- **componentName**: \`${componentName}\``,
         `- **url**: ${jsonUrl}`,
-        `- **maxChars**: ${maxChars}`,
         "",
       ].join("\n");
 
-      const body = ["```tsx", content.slice(0, maxChars), "```"].join("\n");
+      const code = clip(content, maxChars);
+      const body = ["```tsx", code.text, "```"].join("\n");
 
-      return { content: [{ type: "text", text: header + body }] };
+      return { content: [{ type: "text", text: header + body + code.notice }] };
     }
   );
 }
