@@ -277,7 +277,10 @@ export function registerTools(server: McpServer) {
       componentName: z
         .string()
         .trim()
-        .min(1)
+        .regex(
+          /^[A-Za-z0-9_-]+$/,
+          "componentName takes letters, digits, '-' and '_' only"
+        )
         .describe(
           "Component name (e.g. 'liquid-glass-weather',  'single-img-ripple-effect')"
         ),
