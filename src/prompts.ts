@@ -1,9 +1,6 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-  DocsNavigationCategories,
-  DocsNavigationCategory,
-} from "./registry.js";
+import { findComponent } from "./registry.js";
 
 export function registerPrompts(server: McpServer) {
   server.prompt(
@@ -98,25 +95,18 @@ export function registerPrompts(server: McpServer) {
       // Normalize includeSourceCode to boolean early
       const shouldIncludeSource = includeSourceCode === "true";
 
-      let item: DocsNavigationCategory | undefined;
-      if (componentKey)
-        item = DocsNavigationCategories.find((c) => c.key === componentKey);
-      if (!item && componentHref)
-        item = DocsNavigationCategories.find((c) => c.href === componentHref);
-
-      if (!item) {
+      const found = findComponent({ key: componentKey, href: componentHref });
+      if ("error" in found) {
         return {
           messages: [
             {
               role: "user",
-              content: {
-                type: "text",
-                text: `⚠️ Component not found (key=${componentKey ?? "-"}, href=${componentHref ?? "-"})`,
-              },
+              content: { type: "text", text: `⚠️ ${found.error}` },
             },
           ],
         };
       }
+      const { item } = found;
 
       const instructions = [
         `# Component Implementation Guide`,

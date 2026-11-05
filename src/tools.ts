@@ -3,6 +3,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
   DocsNavigationCategories,
   DocsNavigationCategory,
+  findComponent,
 } from "./registry.js";
 import {
   buildRemoteUrl,
@@ -107,22 +108,14 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, maxChars, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
-
-      if (!item) {
+      const found = findComponent({ key, href });
+      if ("error" in found) {
         return {
-          content: [
-            {
-              type: "text",
-              text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
-            },
-          ],
+          content: [{ type: "text", text: found.error }],
           isError: true,
         };
       }
+      const { item } = found;
 
       const url = `${DOCS_SOURCE_BASE}${item.href}.mdx`;
 
@@ -179,22 +172,14 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, pathPrefix, timeoutMs }) => {
-      let item: DocsNavigationCategory | undefined;
-      if (key) item = DocsNavigationCategories.find((c) => c.key === key);
-      if (!item && href)
-        item = DocsNavigationCategories.find((c) => c.href === href);
-
-      if (!item) {
+      const found = findComponent({ key, href });
+      if ("error" in found) {
         return {
-          content: [
-            {
-              type: "text",
-              text: `Not found (key=${key ?? "-"}, href=${href ?? "-"})`,
-            },
-          ],
+          content: [{ type: "text", text: found.error }],
           isError: true,
         };
       }
+      const { item } = found;
 
       const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
       const fetched = await fetchResource(

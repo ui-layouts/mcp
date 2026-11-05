@@ -1137,3 +1137,35 @@ export const DocsNavigationCategories: DocsNavigationCategory[] = [
     tags: ['code tabs', 'tabs', 'code snippet', 'multi-language', 'language switcher', 'syntax highlighting', 'code'],
   },
 ];
+
+function toSlug(ref: string): string {
+  const segments = ref
+    .trim()
+    .toLowerCase()
+    .replace(/^(?:https?:\/\/[^/]+|(?:www\.)?ui-layouts\.com)/, '')
+    .split(/[?#]/, 1)[0]
+    .split('/')
+    .filter(Boolean);
+  if (segments[0] === 'components') segments.shift();
+  return segments.join('/');
+}
+
+export function findComponent({
+  key,
+  href,
+}: {
+  key?: string;
+  href?: string;
+}): { item: DocsNavigationCategory } | { error: string } {
+  const slugs = [key, href].map((ref) => toSlug(ref ?? '')).filter(Boolean);
+  if (slugs.length === 0) {
+    return { error: `Provide key or href, for example key "accordion".` };
+  }
+  for (const slug of slugs) {
+    const item = DocsNavigationCategories.find((c) => c.key === slug);
+    if (item) return { item };
+  }
+  return {
+    error: `No component matches key=${key ?? '-'}, href=${href ?? '-'}. Find valid keys with search_components.`,
+  };
+}
