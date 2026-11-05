@@ -143,11 +143,12 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 **Parameters:**
 - `componentKey` (optional): Component key (e.g. 'accordion', 'sparkles-title')
 - `componentHref` (optional): Component href (e.g. '/components/accordion')
+- One of `componentKey` or `componentHref` is required.
 - `framework` (optional): Target framework (e.g. 'react', 'next', 'vite', 'general', default: 'react')
 - `includeSourceCode` (optional): Whether to include source code ('true' or 'false', default: 'true')
 
 **What it does:**
-- Fetches component documentation, metadata, and optionally source code
+- Fetches component documentation and optionally source code
 - Generates a comprehensive implementation guide with:
   - **Overview**: Component purpose, features, and when to use
   - **Installation**: Dependencies and setup for the target framework
