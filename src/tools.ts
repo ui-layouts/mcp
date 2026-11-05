@@ -6,15 +6,35 @@ import {
 } from "./registry.js";
 import {
   buildRemoteUrl,
-  fetchText,
-  fetchRemoteMetaHTML,
-  fetchJson,
+  fetchResource,
+  type FetchFailure,
 } from "./utils/api.js";
+import { extractMetaFromHtml } from "./utils/html.js";
 
 const norm = (s: string) => s.toLowerCase().trim();
-const BASE_URL = "https://ui-layouts.com";
+const BASE_URL = "https://www.ui-layouts.com";
 const DOCS_SOURCE_BASE =
   "https://raw.githubusercontent.com/ui-layouts/uilayouts/main/apps/ui-layout/content";
+
+function failureText(
+  failure: FetchFailure,
+  url: string,
+  timeoutMs: number,
+  notFound: string
+): string {
+  switch (failure.kind) {
+    case "not_found":
+      return `⚠️ ${notFound} (404 from ${url})`;
+    case "http_error":
+      return `⚠️ HTTP ${failure.status} from ${url}. Not a 404, so the input may still be valid. Retry later.`;
+    case "timeout":
+      return `⚠️ Timed out after ${timeoutMs}ms fetching ${url}. Retry, or raise timeoutMs.`;
+    case "network":
+      return `⚠️ Network error fetching ${url} (${failure.message}). The connection failed, so the input may still be valid.`;
+    case "parse":
+      return `⚠️ Unexpected response body from ${url} (${failure.message}).`;
+  }
+}
 
 export function registerTools(server: McpServer) {
   server.tool(
@@ -106,15 +126,24 @@ export function registerTools(server: McpServer) {
 
       const url = `${DOCS_SOURCE_BASE}${item.href}.mdx`;
 
-      const mdx = await fetchText(url, timeoutMs);
-      if (!mdx) {
+      const fetched = await fetchResource(url, (res) => res.text(), timeoutMs);
+      if (!fetched.ok) {
         return {
           content: [
-            { type: "text", text: `⚠️ Failed to fetch docs source from: ${url}` },
+            {
+              type: "text",
+              text: failureText(
+                fetched.failure,
+                url,
+                timeoutMs,
+                `No docs source for \`${item.key}\` upstream. The bundled registry may be older than the site.`
+              ),
+            },
           ],
           isError: true,
         };
       }
+      const mdx = fetched.value;
 
       const header = [
         `# Docs`,
@@ -134,7 +163,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_component_meta",
-    "Fetch remote HTML metadata from https://ui-layouts.com by calling https://ui-layouts.com/<pathPrefix>/<registry.href>.",
+    `Fetch remote HTML metadata from ${BASE_URL} by calling ${BASE_URL}/<pathPrefix>/<registry.href>.`,
     {
       key: z
         .string()
@@ -168,18 +197,28 @@ export function registerTools(server: McpServer) {
       }
 
       const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
-      const meta = await fetchRemoteMetaHTML(fullUrl, timeoutMs);
-      if (!meta) {
+      const fetched = await fetchResource(
+        fullUrl,
+        async (res) => extractMetaFromHtml(await res.text(), fullUrl),
+        timeoutMs
+      );
+      if (!fetched.ok) {
         return {
           content: [
             {
               type: "text",
-              text: `⚠️ Failed to fetch metadata from: ${fullUrl}`,
+              text: failureText(
+                fetched.failure,
+                fullUrl,
+                timeoutMs,
+                `No page for \`${item.key}\` at this URL.`
+              ),
             },
           ],
           isError: true,
         };
       }
+      const meta = fetched.value;
 
       const componentNamesRaw = meta.other?.["component-names"] ?? [];
       const availableRaw = meta.other?.["available-components"] ?? [];
@@ -241,7 +280,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_source_code",
-    "Fetch component source code bundle from https://ui-layouts.com/r/{key}.json (or custom filename), list files and optionally return a specific file content.",
+    `Fetch component source code bundle from ${BASE_URL}/r/{key}.json (or custom filename), list files and optionally return a specific file content.`,
     {
       componentName: z
         .string()
@@ -256,17 +295,29 @@ export function registerTools(server: McpServer) {
     async ({ componentName, timeoutMs, maxChars }) => {
       const jsonUrl = `${BASE_URL}/r/${componentName}.json`;
 
-      const json = await fetchJson<any>(jsonUrl, timeoutMs);
-      if (!json) {
+      const fetched = await fetchResource(
+        jsonUrl,
+        (res) => res.json() as Promise<{ files?: { content?: string }[] }>,
+        timeoutMs
+      );
+      if (!fetched.ok) {
         return {
           content: [
-            { type: "text", text: `⚠️ Failed to fetch from: ${jsonUrl}` },
+            {
+              type: "text",
+              text: failureText(
+                fetched.failure,
+                jsonUrl,
+                timeoutMs,
+                `No registry item named "${componentName}". Registry names are the \`name\` on preview tags in get_docs output, not the docs key. If this was a preview name, its source is not published.`
+              ),
+            },
           ],
           isError: true,
         };
       }
 
-      const content = json?.files?.[0]?.content;
+      const content = fetched.value?.files?.[0]?.content;
       if (!content) {
         return {
           content: [{ type: "text", text: `⚠️ No content found in ${jsonUrl}` }],

@@ -1,7 +1,17 @@
-import { extractMetaFromHtml } from "./html.js";
 import pkg from "../../package.json" with { type: "json" };
 
 const UA = `@ui-layouts/mcp/${pkg.version} (+mcp)`;
+
+export type FetchFailure =
+  | { kind: "not_found" }
+  | { kind: "http_error"; status: number }
+  | { kind: "timeout" }
+  | { kind: "network"; message: string }
+  | { kind: "parse"; message: string };
+
+export type FetchResult<T> =
+  | { ok: true; value: T }
+  | { ok: false; failure: FetchFailure };
 
 export function buildRemoteUrl(
   baseUrl: string,
@@ -14,65 +24,37 @@ export function buildRemoteUrl(
   return `${base}${prefix}${cleanHref}`;
 }
 
-export async function fetchRemoteMetaHTML(url: string, timeoutMs = 7000) {
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), timeoutMs);
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: {
-        "User-Agent": UA,
-        Accept: "text/html,application/xhtml+xml",
-      },
-    });
-    clearTimeout(t);
-    if (!res.ok) return null;
-    const html = await res.text();
-    return extractMetaFromHtml(html, url);
-  } catch {
-    return null;
-  }
-}
-export async function fetchText(
+export async function fetchResource<T>(
   url: string,
-  timeoutMs = 7000
-): Promise<string | null> {
+  parse: (res: Response) => Promise<T>,
+  timeoutMs: number
+): Promise<FetchResult<T>> {
+  const signal = AbortSignal.timeout(timeoutMs);
   try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), timeoutMs);
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: {
-        "User-Agent": UA,
-        Accept: "text/plain,text/html;q=0.9,*/*;q=0.8",
-      },
-    });
-    clearTimeout(t);
-    if (!res.ok) return null;
-    return await res.text();
-  } catch {
-    return null;
+    const res = await fetch(url, { signal, headers: { "User-Agent": UA } });
+    if (!res.ok) {
+      return {
+        ok: false,
+        failure:
+          res.status === 404
+            ? { kind: "not_found" }
+            : { kind: "http_error", status: res.status },
+      };
+    }
+    return { ok: true, value: await parse(res) };
+  } catch (err) {
+    return { ok: false, failure: classify(err, signal) };
   }
 }
 
-export async function fetchJson<T = any>(
-  url: string,
-  timeoutMs = 7000
-): Promise<T | null> {
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), timeoutMs);
-    const res = await fetch(url, {
-      signal: ctrl.signal,
-      headers: {
-        "User-Agent": UA,
-        Accept: "application/json,text/plain;q=0.9,*/*;q=0.8",
-      },
-    });
-    clearTimeout(t);
-    if (!res.ok) return null;
-    return (await res.json()) as T;
-  } catch {
-    return null;
+function classify(err: unknown, signal: AbortSignal): FetchFailure {
+  if (signal.aborted) return { kind: "timeout" };
+  const message = err instanceof Error ? err.message : String(err);
+  if (err instanceof SyntaxError) return { kind: "parse", message };
+  const cause = err instanceof Error ? err.cause : undefined;
+  if (cause instanceof Error) {
+    const code = "code" in cause ? String(cause.code) : undefined;
+    return { kind: "network", message: code ?? cause.message };
   }
+  return { kind: "network", message };
 }
