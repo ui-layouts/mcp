@@ -4,11 +4,7 @@ import {
   DocsNavigationCategories,
   DocsNavigationCategory,
 } from "./registry.js";
-import {
-  buildRemoteUrl,
-  fetchResource,
-  type FetchFailure,
-} from "./utils/api.js";
+import { fetchResource, type FetchFailure } from "./utils/api.js";
 import { extractMetaFromHtml } from "./utils/html.js";
 
 const norm = (s: string) => s.toLowerCase().trim();
@@ -163,7 +159,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_component_meta",
-    `Fetch remote HTML metadata from ${BASE_URL} by calling ${BASE_URL}/<pathPrefix>/<registry.href>.`,
+    `Fetch the HTML metadata (title, description, keywords, Open Graph, Twitter card) of a component's page on ${BASE_URL}.`,
     {
       key: z
         .string()
@@ -175,10 +171,9 @@ export function registerTools(server: McpServer) {
         .describe(
           "DocsNavigationCategory href (e.g. '/components/sparkles-title')"
         ),
-      pathPrefix: z.string().nullable().optional().default(null),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
-    async ({ key, href, pathPrefix, timeoutMs }) => {
+    async ({ key, href, timeoutMs }) => {
       let item: DocsNavigationCategory | undefined;
       if (key) item = DocsNavigationCategories.find((c) => c.key === key);
       if (!item && href)
@@ -196,7 +191,7 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const fullUrl = buildRemoteUrl(BASE_URL, item.href, pathPrefix);
+      const fullUrl = `${BASE_URL}${item.href}`;
       const fetched = await fetchResource(
         fullUrl,
         async (res) => extractMetaFromHtml(await res.text(), fullUrl),
