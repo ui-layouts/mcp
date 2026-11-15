@@ -52,14 +52,13 @@ export function renderSearch(q: string, found: SearchResult, limit: number) {
   }
   if (lines.length === 0) lines.push("- No matching components.");
 
-  const counts = [
-    `${hits.length} of ${found.hits.length}`,
-    ...(found.unlisted.length
-      ? [`${found.unlisted.length} without a docs page`]
-      : []),
-  ].join(", ");
+  const withoutDocs = found.unlisted.length
+    ? `, ${found.unlisted.length} without a docs page`
+    : "";
 
-  return `# Search Results (${counts}) for "${q}"\n\n${lines.join("\n")}`;
+  return `# Search Results (${hits.length} of ${
+    found.hits.length
+  }${withoutDocs}) for "${q}"\n\n${lines.join("\n")}`;
 }
 
 export function registerTools(server: McpServer) {

@@ -54,9 +54,6 @@ export function search(
 ): SearchResult {
   const words = [...new Set(wordsOf(query))];
   if (words.length === 0) return { hits: [], unlisted: [] };
-  // One prefix in an item name or group is the only match under WEIGHT.other.
-  // Next to other query words that found nothing, it is noise.
-  const floor = words.length > 1 ? WEIGHT.other : PREFIX;
 
   const matched = (name: string) =>
     words.filter((word) => match(word, name)).length;
@@ -72,7 +69,7 @@ export function search(
       items: entry.items.filter(matches),
       score: score(words, entry),
     }))
-    .filter((hit) => hit.score >= floor)
+    .filter((hit) => hit.score > 0)
     .sort((a, b) => b.score - a.score)
     .map(({ entry, items }) => ({ entry, items }));
 

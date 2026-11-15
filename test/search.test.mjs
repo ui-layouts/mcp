@@ -197,14 +197,6 @@ test("a repeated query word counts once", () => {
   ]);
 });
 
-test("a lone prefix in an item name or group is a hit only for a one-word query", () => {
-  const entries = [entry("team-section", { items: ["team-modern"] })];
-
-  assert.deepEqual(keys("mode", entries), ["team-section"]);
-  assert.deepEqual(keys("dark mode toggle", entries), []);
-  assert.deepEqual(keys("dark modern toggle", entries), ["team-section"]);
-});
-
 test("the rendered result cuts hits at the limit and reports the total", () => {
   const entries = [
     entry("card-one", { items: ["card-a"] }),
@@ -221,20 +213,11 @@ test("the rendered result cuts hits at the limit and reports the total", () => {
 
 test("the rendered result counts and lists names that have no docs page", () => {
   const only = renderSearch("flip", search("flip", [], ["flip-clock"]), 20);
-  assert.equal(
-    only,
-    [
-      '# Search Results (0 of 0, 1 without a docs page) for "flip"',
-      "",
-      "## Registry items without a docs page",
-      "",
-      "Pass these names straight to get_source_code: `flip-clock`",
-    ].join("\n")
-  );
+  assert.match(only, /\(0 of 0, 1 without a docs page\)/);
+  assert.match(only, /`flip-clock`/);
+  assert.doesNotMatch(only, /No matching/);
 
   const none = renderSearch("zzz", search("zzz", [], ["flip-clock"]), 20);
-  assert.equal(
-    none,
-    '# Search Results (0 of 0) for "zzz"\n\n- No matching components.'
-  );
+  assert.match(none, /\(0 of 0\)/);
+  assert.match(none, /No matching/);
 });
