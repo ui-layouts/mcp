@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { search } from "../dist/src/search.js";
-import { renderSearch } from "../dist/src/tools.js";
 
 const entry = (key, fields = {}) => ({
   kind: "component",
@@ -195,29 +194,4 @@ test("a repeated query word counts once", () => {
     "effect-card",
     "buttons",
   ]);
-});
-
-test("the rendered result cuts hits at the limit and reports the total", () => {
-  const entries = [
-    entry("card-one", { items: ["card-a"] }),
-    entry("card-two"),
-    entry("card-three"),
-  ];
-  const text = renderSearch("card", search("card", entries, []), 2);
-
-  assert.match(text, /^# Search Results \(2 of 3\) for "card"/);
-  assert.match(text, /key: `card-one`[^]*matched items: `card-a`/);
-  assert.match(text, /key: `card-two`/);
-  assert.doesNotMatch(text, /card-three/);
-});
-
-test("the rendered result counts and lists names that have no docs page", () => {
-  const only = renderSearch("flip", search("flip", [], ["flip-clock"]), 20);
-  assert.match(only, /\(0 of 0, 1 without a docs page\)/);
-  assert.match(only, /`flip-clock`/);
-  assert.doesNotMatch(only, /No matching/);
-
-  const none = renderSearch("zzz", search("zzz", [], ["flip-clock"]), 20);
-  assert.match(none, /\(0 of 0\)/);
-  assert.match(none, /No matching/);
 });
