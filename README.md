@@ -50,13 +50,14 @@ This registers the MCP server under the CLI-safe name `ui-layouts-mcp` while sti
 
 Search the **ui-layouts.com** docs pages, blocks sections, and registry item names.
 Results are ranked, best match first. A query can have several words (e.g. `drag and drop`), and an entry that matches more of them ranks higher. Separators do not matter, so `datepicker` finds `date picker`.
+A query word matches a whole word or the start of one (3 letters or more). There is no fuzzy or plural matching, so `modal` finds what `modals` and `modl` do not.
 
 Each result lists the registry items that matched the query. Registry items that belong to no docs page are listed separately. Pass any of these names to `get_source_code`.
 
 **Parameters**
 
 - `q` — one or more words, matched against name, key, group, tags, and registry item names
-- `limit` — max results to return (default `20`, max `100`). The header shows how many matched in total (e.g. `20 of 31`)
+- `limit` — max results to return (default `20`, max `100`). The header shows how many matched in total (e.g. `20 of 31`), plus the count of matching items without a docs page
 
 **When it's useful**
 

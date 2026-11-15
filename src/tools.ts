@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { entries, findEntry, hrefOf, unlisted } from "./registry.js";
-import { search } from "./search.js";
+import { search, type SearchResult } from "./search.js";
 import { fetchResource, type FetchFailure } from "./utils/api.js";
 import { extractMetaFromHtml } from "./utils/html.js";
 
@@ -29,10 +29,43 @@ function failureText(
   }
 }
 
+export function renderSearch(q: string, found: SearchResult, limit: number) {
+  const hits = found.hits.slice(0, limit);
+  const names = (list: string[]) =>
+    list.map((name) => `\`${name}\``).join(", ");
+
+  const lines = hits.map(
+    ({ entry: c, items }) =>
+      `- **${c.name}**  \n  - key: \`${c.key}\`  \n  - group: ${
+        c.group
+      }  \n  - href: \`${hrefOf(c)}\`${
+        c.tags?.length ? `  \n  - tags: ${c.tags.join(", ")}` : ""
+      }${items.length ? `  \n  - matched items: ${names(items)}` : ""}`
+  );
+  if (found.unlisted.length) {
+    if (lines.length) lines.push("");
+    lines.push(
+      "## Registry items without a docs page",
+      "",
+      `Pass these names straight to get_source_code: ${names(found.unlisted)}`
+    );
+  }
+  if (lines.length === 0) lines.push("- No matching components.");
+
+  const counts = [
+    `${hits.length} of ${found.hits.length}`,
+    ...(found.unlisted.length
+      ? [`${found.unlisted.length} without a docs page`]
+      : []),
+  ].join(", ");
+
+  return `# Search Results (${counts}) for "${q}"\n\n${lines.join("\n")}`;
+}
+
 export function registerTools(server: McpServer) {
   server.tool(
     "search_components",
-    "Search ui-layouts docs pages, blocks sections, and registry item names. Results are ranked, best match first. A query can have several words, and an entry that matches more of them ranks higher.",
+    "Search ui-layouts docs pages, blocks sections, and registry item names. Results are ranked, best match first. A query can have several words, and an entry that matches more of them ranks higher. A query word matches a whole word or the start of one (3+ letters). There is no fuzzy or plural matching, so use the singular ('modal', not 'modals').",
     {
       q: z
         .string()
@@ -43,45 +76,14 @@ export function registerTools(server: McpServer) {
         ),
       limit: z.number().int().min(1).max(100).optional().default(20),
     },
-    async ({ q, limit }) => {
-      const found = search(q, entries, unlisted);
-      const hits = found.hits.slice(0, limit);
-      const names = (list: string[]) =>
-        list.map((name) => `\`${name}\``).join(", ");
-
-      const lines =
-        hits.length === 0 && found.unlisted.length === 0
-          ? ["- No matching components."]
-          : hits.map(
-              ({ entry: c, items }) =>
-                `- **${c.name}**  \n  - key: \`${c.key}\`  \n  - group: ${
-                  c.group
-                }  \n  - href: \`${hrefOf(c)}\`${
-                  c.tags?.length ? `  \n  - tags: ${c.tags.join(", ")}` : ""
-                }${items.length ? `  \n  - matched items: ${names(items)}` : ""}`
-            );
-      if (found.unlisted.length) {
-        lines.push(
-          "",
-          "## Registry items without a docs page",
-          "",
-          `Pass these names straight to get_source_code: ${names(
-            found.unlisted
-          )}`
-        );
-      }
-
-      return {
-        content: [
-          {
-            type: "text",
-            text: `# Search Results (${hits.length} of ${
-              found.hits.length
-            }) for "${q}"\n\n${lines.join("\n")}`,
-          },
-        ],
-      };
-    }
+    async ({ q, limit }) => ({
+      content: [
+        {
+          type: "text",
+          text: renderSearch(q, search(q, entries, unlisted), limit),
+        },
+      ],
+    })
   );
 
   server.tool(

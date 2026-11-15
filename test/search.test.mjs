@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { search } from "../dist/src/search.js";
+import { renderSearch } from "../dist/src/tools.js";
 
 const entry = (key, fields = {}) => ({
   kind: "component",
@@ -170,4 +171,70 @@ test("ties keep input order", () => {
     "linear-modal",
     "gallery-modal",
   ]);
+});
+
+test("a word under three letters matches only as a whole word", () => {
+  const entries = [
+    entry("animated-beam"),
+    entry("buttons", { items: ["btn-bg-shine"] }),
+    entry("a-frame"),
+  ];
+
+  assert.deepEqual(keys("a", entries), ["a-frame"]);
+  assert.deepEqual(keys("bg", entries), ["buttons"]);
+  assert.deepEqual(keys("ani", entries), ["animated-beam"]);
+});
+
+test("a repeated query word counts once", () => {
+  const entries = [
+    entry("effect-card", { tags: ["effect"] }),
+    entry("buttons", { items: ["btn-shine"] }),
+  ];
+
+  assert.deepEqual(keys("btn btn btn effect", entries), [
+    "effect-card",
+    "buttons",
+  ]);
+});
+
+test("a lone prefix in an item name or group is a hit only for a one-word query", () => {
+  const entries = [entry("team-section", { items: ["team-modern"] })];
+
+  assert.deepEqual(keys("mode", entries), ["team-section"]);
+  assert.deepEqual(keys("dark mode toggle", entries), []);
+  assert.deepEqual(keys("dark modern toggle", entries), ["team-section"]);
+});
+
+test("the rendered result cuts hits at the limit and reports the total", () => {
+  const entries = [
+    entry("card-one", { items: ["card-a"] }),
+    entry("card-two"),
+    entry("card-three"),
+  ];
+  const text = renderSearch("card", search("card", entries, []), 2);
+
+  assert.match(text, /^# Search Results \(2 of 3\) for "card"/);
+  assert.match(text, /key: `card-one`[^]*matched items: `card-a`/);
+  assert.match(text, /key: `card-two`/);
+  assert.doesNotMatch(text, /card-three/);
+});
+
+test("the rendered result counts and lists names that have no docs page", () => {
+  const only = renderSearch("flip", search("flip", [], ["flip-clock"]), 20);
+  assert.equal(
+    only,
+    [
+      '# Search Results (0 of 0, 1 without a docs page) for "flip"',
+      "",
+      "## Registry items without a docs page",
+      "",
+      "Pass these names straight to get_source_code: `flip-clock`",
+    ].join("\n")
+  );
+
+  const none = renderSearch("zzz", search("zzz", [], ["flip-clock"]), 20);
+  assert.equal(
+    none,
+    '# Search Results (0 of 0) for "zzz"\n\n- No matching components.'
+  );
 });
