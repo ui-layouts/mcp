@@ -2,6 +2,7 @@ import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { entries, findEntry, hrefOf, unlisted } from "./registry.js";
 import { search } from "./search.js";
+import { MAX_CHARS, registryItemSchema, renderSource } from "./source.js";
 import { fetchResource, type FetchFailure } from "./utils/api.js";
 import { extractMetaFromHtml } from "./utils/html.js";
 
@@ -270,7 +271,7 @@ export function registerTools(server: McpServer) {
 
   server.tool(
     "get_source_code",
-    `Fetch component source code bundle from ${BASE_URL}/r/{componentName}.json (or custom filename), list files and optionally return a specific file content.`,
+    `Fetch the source code of a registry item from ${BASE_URL}/r/{componentName}.json. Returns every file of the item with its path, plus the npm dependencies to install. maxChars is one budget across all files; when it runs out, the response ends with a notice naming the files that were cut short or left out.`,
     {
       componentName: z
         .string()
@@ -279,7 +280,13 @@ export function registerTools(server: McpServer) {
         .describe(
           "Registry item name from the items of get_docs (e.g. 'liquid-glass-weather', 'btn-bg-shine')"
         ),
-      maxChars: z.number().int().min(200).max(200000).optional().default(20000),
+      maxChars: z
+        .number()
+        .int()
+        .min(200)
+        .max(MAX_CHARS)
+        .optional()
+        .default(20000),
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ componentName, timeoutMs, maxChars }) => {
@@ -287,7 +294,7 @@ export function registerTools(server: McpServer) {
 
       const fetched = await fetchResource(
         jsonUrl,
-        (res) => res.json() as Promise<{ files?: { content?: string }[] }>,
+        (res) => res.json() as Promise<unknown>,
         timeoutMs
       );
       if (!fetched.ok) {
@@ -307,25 +314,27 @@ export function registerTools(server: McpServer) {
         };
       }
 
-      const content = fetched.value?.files?.[0]?.content;
-      if (!content) {
+      const item = registryItemSchema.safeParse(fetched.value);
+      if (!item.success) {
         return {
-          content: [{ type: "text", text: `⚠️ No content found in ${jsonUrl}` }],
+          content: [
+            { type: "text", text: `⚠️ No source files found in ${jsonUrl}` },
+          ],
           isError: true,
         };
       }
 
-      const header = [
-        `# Source Code`,
-        `- **componentName**: \`${componentName}\``,
-        `- **url**: ${jsonUrl}`,
-        `- **maxChars**: ${maxChars}`,
-        "",
-      ].join("\n");
-
-      const body = ["```tsx", content.slice(0, maxChars), "```"].join("\n");
-
-      return { content: [{ type: "text", text: header + body }] };
+      return {
+        content: [
+          {
+            type: "text",
+            text: renderSource(
+              { componentName, url: jsonUrl, maxChars },
+              item.data
+            ),
+          },
+        ],
+      };
     }
   );
 }

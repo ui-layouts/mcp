@@ -104,9 +104,17 @@ and even custom metadata like `component-names` and `available-components`.
 
 ### 💾 `get_source_code`
 
-Fetch the **actual TypeScript/React source code** of a component directly from
-[`https://www.ui-layouts.com/r/{component}.json`](https://www.ui-layouts.com/r/accordion.json).
-The tool reads the `files[].content` field from the JSON registry and returns the `.tsx` implementation.
+Fetch the **actual TypeScript/React source code** of a registry item directly from
+[`https://www.ui-layouts.com/r/{componentName}.json`](https://www.ui-layouts.com/r/liquid-glass-weather.json).
+The tool returns **every file** of the item, each under its path, so the files an example imports come with it. The header lists the npm `dependencies` to install.
+
+`maxChars` is one budget across all files, spent in file order. When it runs out, the response ends with a notice that names the files that were cut short or left out and the `maxChars` that returns the rest.
+
+**Parameters**
+
+- `componentName` — registry item name from the `items` of `get_docs` (e.g. `liquid-glass-weather`)
+- `maxChars` — max characters of file content to return, across all files (default `20000`, max `200000`)
+- `timeoutMs` — fetch timeout in milliseconds (default `7000`)
 
 **When it's useful**
 
