@@ -277,6 +277,10 @@ export function registerTools(server: McpServer) {
         .string()
         .trim()
         .min(1)
+        .regex(
+          /^[A-Za-z0-9_-]+$/,
+          "componentName takes letters, digits, '-' and '_' only"
+        )
         .describe(
           "Registry item name from the items of get_docs (e.g. 'liquid-glass-weather', 'btn-bg-shine')"
         ),
