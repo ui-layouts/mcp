@@ -3,6 +3,14 @@
 ## [1.0.0](https://github.com/ui-layouts/mcp/compare/0.4.0...1.0.0) (2026-11-15)
 
 
+### ⚠ BREAKING CHANGES
+
+* **get_docs:** returns MDX from the source repo. The `format` and `pathPrefix` arguments are gone; a call that still passes them gets MDX.
+* **get_docs:** the header has `source` in place of `url`, and the default `maxChars` is 20000.
+* **get_component_meta:** the `pathPrefix` argument is gone.
+* **get_source_code:** returns every file of the item, each under its path, where it returned the first file only.
+* **implement_component:** an unknown or missing component is a prompt error (-32602), where it returned a "Component not found" message.
+
 ### Features
 
 * **get_docs:** read docs from the MDX source ([#15](https://github.com/ui-layouts/mcp/issues/15)) ([afa62fb](https://github.com/ui-layouts/mcp/commit/afa62fbeb5b1dbd459ab36a2f3b55925ce95df03))
@@ -22,11 +30,6 @@
 
 * bump zod from 3.25.76 to 4.6.7 ([#14](https://github.com/ui-layouts/mcp/issues/14)) ([a7cae4a](https://github.com/ui-layouts/mcp/commit/a7cae4ae0f8abf38c6d8a85601f9d973aa4b2680))
 * require @modelcontextprotocol/sdk ^1.32.2 ([#18](https://github.com/ui-layouts/mcp/issues/18)) ([ba02f72](https://github.com/ui-layouts/mcp/commit/ba02f725701fb7bcace3695221bff642d01a6482))
-
-
-### Miscellaneous Chores
-
-* release 1.0.0 ([4581d88](https://github.com/ui-layouts/mcp/commit/4581d88593c8f3b50240347790af2beb4fd4d5b1))
 
 ## [0.4.0](https://github.com/ui-layouts/mcp/compare/0.3.0...0.4.0) (2026-11-04)
 
