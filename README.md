@@ -91,22 +91,29 @@ A blocks entry (e.g. `hero-section`) has no docs page, so it returns only its `i
 ### 🧩 `get_component_meta`
 
 Fetch structured **HTML metadata** for a specific component from **ui-layouts.com**.
-It includes fields such as **title**, **description**, **keywords**, **Open Graph**, **Twitter card**,
-and even custom metadata like `component-names` and `available-components`.
+It includes fields such as **title**, **description**, **keywords**, **Open Graph**, and **Twitter card**.
+Registry item names for `get_source_code` come from `get_docs`, not from this tool.
 
 **When it's useful**
 
 - To understand a component’s intent or SEO context
 - To generate previews or summaries automatically
-- To retrieve linked `componentNames` for source code lookup
 
 ---
 
 ### 💾 `get_source_code`
 
-Fetch the **actual TypeScript/React source code** of a component directly from
-[`https://www.ui-layouts.com/r/{component}.json`](https://www.ui-layouts.com/r/accordion.json).
-The tool reads the `files[].content` field from the JSON registry and returns the `.tsx` implementation.
+Fetch the **actual TypeScript/React source code** of a registry item directly from
+[`https://www.ui-layouts.com/r/{componentName}.json`](https://www.ui-layouts.com/r/liquid-glass-weather.json).
+The tool returns **every file** of the item, each under its path, so the files an example imports come with it. The header lists the npm `dependencies` to install.
+
+`maxChars` is one budget across all files, spent in file order. When it runs out, the response ends with a notice that names the files that were cut short or left out and the `maxChars` that returns the rest.
+
+**Parameters**
+
+- `componentName` — registry item name from the `items` of `get_docs` (e.g. `liquid-glass-weather`)
+- `maxChars` — max characters of file content to return, across all files (default `20000`, max `200000`)
+- `timeoutMs` — fetch timeout in milliseconds (default `7000`)
 
 **When it's useful**
 
@@ -178,15 +185,15 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 
 ## 🔗 Recommended Workflow
 
-> 💡 **Tip:** Combine these tools for a full exploration experience:
-> `search_components → get_docs → get_component_meta → get_source_code`
+> 💡 **Tip:** The path from a keyword to source code is:
+> `search_components → get_docs → get_source_code`
 
-| Step | Description                               | Example                                                          |
-| ---- | ----------------------------------------- | ---------------------------------------------------------------- |
-| ①    | Find components matching a keyword or tag | `search_components { "q": "accordion" }`                         |
-| ②    | Fetch their documentation (MDX)           | `get_docs { "key": "accordion" }`                                |
-| ③    | Retrieve metadata & component links       | `get_component_meta { "key": "accordion" }`                      |
-| ④    | Get TSX source code from registry         | `get_source_code { "componentName": "single-layout-accordion" }` |
+| Step | Description                                    | Example                                                          |
+| ---- | ---------------------------------------------- | ---------------------------------------------------------------- |
+| ①    | Find components matching a keyword or tag      | `search_components { "q": "accordion" }`                         |
+| ②    | Fetch the documentation (MDX) and item names   | `get_docs { "key": "accordion" }`                                |
+| ③    | Get the source files of an item                | `get_source_code { "componentName": "single-layout-accordion" }` |
+| —    | Optional: page metadata (title, Open Graph)    | `get_component_meta { "key": "accordion" }`                      |
 
 ---
 
@@ -210,7 +217,6 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 ```bash
 > call tool search_components { "q": "slider" }
 > call tool get_docs { "key": "range-slider" }
-> call tool get_component_meta { "key": "range-slider" }
 > call tool get_source_code { "componentName": "dual-range-slider" }
 ```
 
