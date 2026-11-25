@@ -52,6 +52,12 @@ async function fromMain() {
   const assigned = new Set(live.flatMap(entry => entry.items));
   for (const item of registry.items) {
     if (assigned.has(item.name)) continue;
+    const named = components.get(item.name);
+    if (named) {
+      named.items.push(item.name);
+      assigned.add(item.name);
+      continue;
+    }
     for (const file of item.files) {
       const key = file.path.match(/^(?:\.\/)?registry\/components\/([^/]+)\//)?.[1];
       const entry = key && components.get(key);
