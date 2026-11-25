@@ -1,6 +1,7 @@
+import { getCatalog } from "./catalog.js";
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { entries, findEntry, hrefOf, unlisted } from "./registry.js";
+import { findEntry, hrefOf } from "./registry.js";
 import { search } from "./search.js";
 import { MAX_CHARS, registryItemSchema, renderSource } from "./source.js";
 import { fetchResource, type FetchFailure } from "./utils/api.js";
@@ -45,6 +46,7 @@ export function registerTools(server: McpServer) {
       limit: z.number().int().min(1).max(100).optional().default(20),
     },
     async ({ q, limit }) => {
+      const { entries, unlisted } = await getCatalog();
       const found = search(q, entries, unlisted);
       const hits = found.hits.slice(0, limit);
       const names = (list: string[]) =>
@@ -98,7 +100,7 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, maxChars, timeoutMs }) => {
-      const item = findEntry(key, href);
+      const item = findEntry(key, href, (await getCatalog()).entries);
 
       if (!item) {
         return {
@@ -173,7 +175,7 @@ export function registerTools(server: McpServer) {
       timeoutMs: z.number().int().min(1000).max(20000).optional().default(7000),
     },
     async ({ key, href, timeoutMs }) => {
-      const item = findEntry(key, href);
+      const item = findEntry(key, href, (await getCatalog()).entries);
 
       if (!item) {
         return {

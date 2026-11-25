@@ -208,7 +208,7 @@ Get a step-by-step implementation guide for a ui-layouts component, including co
 
 ### 🔄 Updating the registry
 
-`src/registry.json` is the index the tools search. It mirrors the docs navigation and `registry.json` of the [ui-layouts site repo](https://github.com/ui-layouts/uilayouts). When the site adds a docs page or a registry item, edit the file by hand.
+The server discovers component docs and registry items from the website repository’s `main` branch. Searches and lookups refresh the catalog on demand every five minutes. A failed refresh uses the last successful catalog (or the bundled index on first launch) and retries on a request after 30 seconds. New components do not require another MCP release.
 
 ---
 

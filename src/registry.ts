@@ -15,9 +15,9 @@ export const unlisted: string[] = data.unlisted;
 export const hrefOf = (entry: RegistryEntry) =>
   `/${entry.kind === "block" ? "blocks" : "components"}/${entry.key}`;
 
-export function findEntry(key?: string, href?: string) {
+export function findEntry(key?: string, href?: string, catalog = entries) {
   return (
-    (key ? entries.find((e) => e.key === key) : undefined) ??
-    (href ? entries.find((e) => hrefOf(e) === href) : undefined)
+    (key ? catalog.find((e) => e.key === key) : undefined) ??
+    (href ? catalog.find((e) => hrefOf(e) === href) : undefined)
   );
 }
