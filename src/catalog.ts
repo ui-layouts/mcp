@@ -4,8 +4,11 @@ import { entries, unlisted, type RegistryEntry } from "./registry.js";
 const repository = "ui-layouts/uilayouts";
 const root = "apps/ui-layout";
 const docs = root + "/content/components/";
-const treeSchema = z.object({
+const commitSchema = z.object({
   sha: z.string().regex(/^[a-f0-9]{40}$/),
+  commit: z.object({ tree: z.object({ sha: z.string().regex(/^[a-f0-9]{40}$/) }) }),
+});
+const treeSchema = z.object({
   truncated: z.literal(false),
   tree: z.array(z.object({ path: z.string(), type: z.string() })),
 });
@@ -17,18 +20,19 @@ const registrySchema = z.object({
 });
 
 async function json(url: string) {
-  const response = await fetch(url, { signal: AbortSignal.timeout(5000) });
+  const response = await fetch(url, { signal: AbortSignal.timeout(15000) });
   if (!response.ok) throw new Error(`Catalog request returned ${response.status}`);
   return response.json();
 }
 
 async function fromMain() {
-  const tree = treeSchema.parse(await json(
-    `https://api.github.com/repos/${repository}/git/trees/main?recursive=1`
+  const commit = commitSchema.parse(await json(
+    `https://api.github.com/repos/${repository}/commits/main`
   ));
-  const registry = registrySchema.parse(await json(
-    `https://raw.githubusercontent.com/${repository}/${tree.sha}/${root}/registry.json`
-  ));
+  const [tree, registry] = await Promise.all([
+    json(`https://api.github.com/repos/${repository}/git/trees/${commit.commit.tree.sha}?recursive=1`).then(data => treeSchema.parse(data)),
+    json(`https://raw.githubusercontent.com/${repository}/${commit.sha}/${root}/registry.json`).then(data => registrySchema.parse(data)),
+  ]);
   const pages = tree.tree.filter(file => file.type === "blob" && file.path.startsWith(docs))
     .map(file => file.path.slice(docs.length))
     .filter(path => /^[\w-]+\.mdx$/.test(path))
