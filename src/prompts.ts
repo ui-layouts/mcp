@@ -1,3 +1,4 @@
+import { getCatalog } from "./catalog.js";
 import { z } from "zod";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { ErrorCode, McpError } from "@modelcontextprotocol/sdk/types.js";
@@ -100,7 +101,7 @@ export function registerPrompts(server: McpServer) {
         );
       }
 
-      const item = findEntry(componentKey, componentHref);
+      const item = findEntry(componentKey, componentHref, (await getCatalog()).entries);
 
       if (!item) {
         throw new McpError(
